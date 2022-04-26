@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 
 void main() {
   runApp(const MyApp());
@@ -113,3 +114,37 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+=======
+import 'package:projetflutter_nam/screens/homepage.dart';
+
+void main() {
+  runApp(MyApp());
+  //mettre le notifier provider le plus proche possible du runApp
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context){
+    return const MaterialApp(
+      home: Homepage(),
+    );
+  }
+}
+
+/*
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        textTheme: GoogleFonts.nunitoSansTextTheme(
+          Theme.of(context).textTheme,
+        ),
+      ),
+      home: Homepage(),
+    );
+  }
+}
+ */
+>>>>>>> a908dfc (containers de base et FAB)
