@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-
+/*
 void main() {
   runApp(const MyApp());
 }
@@ -114,7 +113,11 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-=======
+
+ */
+
+
+
 import 'package:projetflutter_nam/screens/homepage.dart';
 
 void main() {
@@ -146,5 +149,8 @@ class MyApp extends StatelessWidget {
     );
   }
 }
- */
->>>>>>> a908dfc (containers de base et FAB)
+*/
+
+//>>>>>>> a908dfc (containers de base et FAB)
+
+
