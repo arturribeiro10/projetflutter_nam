@@ -50,3 +50,52 @@ class TaskCardWidget extends StatelessWidget {
     );
   }
 }
+
+class ToDoWidget extends StatelessWidget {
+  String text;
+  bool isDone;
+
+  ToDoWidget(this.text,
+      this.isDone);
+  //ToDoWidget({required this.text, required this.isDone});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 24.0,
+        vertical: 12.0,
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 20.0,
+            height: 20.0,
+            margin: const EdgeInsets.only(
+              right: 12.0,
+            ),
+            child: Icon(
+              isDone ? Icons.check_box : Icons.check_box_outline_blank,
+              color: Colors.blueGrey,
+              size: 24.0,
+            ),
+
+          ),
+          Text(
+            text ?? "Entrer un élément à effectuer",
+          style: const TextStyle(
+            //color: Colors.blueGrey,
+            fontSize: 16.0,
+            fontWeight: FontWeight.bold,
+          ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+/*
+* Author(s) : Artur Ribeiro
+*/
