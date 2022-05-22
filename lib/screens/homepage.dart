@@ -15,6 +15,24 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      /*
+      * Author(s) : Nicolas Corminboeuf
+      * AppBar with searchBar
+      */
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.search),
+          onPressed: () {
+            showSearch(
+              context: context,
+              delegate: CustomSearchDelegate(),
+            );
+          },
+        ),
+      ),
+      /*
+      * Author(s) : Artur Ribeiro
+      */
       body: SafeArea(
         child: Container(
           width: double.infinity,
@@ -80,6 +98,79 @@ class _HomepageState extends State<Homepage> {
   }
 }
 
-/*
-* Author(s) : Artur Ribeiro
-*/
+      /*
+      * Author(s) : Nicolas Corminboeuf
+      * Class who manages the searchbar
+      */
+class CustomSearchDelegate extends SearchDelegate {
+  List<String> searchTerms = [
+    'Mangue',
+    'Kiwi',
+    'Fraise',
+    'Pomme',
+    'Ananas'
+  ];
+
+  @override
+  //Nettoie la requête
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: const Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+        },
+      )
+    ];
+  }
+
+  @override
+  //Quitter et fermer la searchbar
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        close(context, null);
+      },
+      icon: const Icon(Icons.arrow_back),
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    List<String> matchQuery = [];
+    for (var fruit in searchTerms) {
+      if (fruit.toLowerCase().contains(query.toLowerCase())) {
+        matchQuery.add(fruit);
+      }
+    }
+    return ListView.builder(
+      itemCount: matchQuery.length,
+      itemBuilder: (context, index) {
+        var result = matchQuery[index];
+        return ListTile(
+          title: Text(result),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    List<String> matchQuery = [];
+    for (var fruit in searchTerms) {
+      if (fruit.toLowerCase().contains(query.toLowerCase())) {
+        matchQuery.add(fruit);
+      }
+    }
+    return ListView.builder(
+      itemCount: matchQuery.length,
+      itemBuilder: (context, index) {
+        var result = matchQuery[index];
+        return ListTile(
+          title: Text(result),
+        );
+      },
+    );
+  }
+}
+
