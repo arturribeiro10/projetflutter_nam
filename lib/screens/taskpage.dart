@@ -84,12 +84,11 @@ class _TaskpageState extends State<Taskpage> {
             label: const Text("Create"),
             backgroundColor: Colors.grey,
             onPressed: () {}),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         bottomNavigationBar: BottomAppBar(
           color: Colors.white70,
           child: Row(
               mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 IconButton(
                   iconSize: 36.0,
@@ -137,7 +136,8 @@ class _TaskpageState extends State<Taskpage> {
                     );
                   },
                 )
-              ]),
+              ]
+          ),
           shape: AutomaticNotchedShape(
               RoundedRectangleBorder(), StadiumBorder(side: BorderSide())),
         )
