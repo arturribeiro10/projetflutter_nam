@@ -67,30 +67,30 @@ class _HomepageState extends State<Homepage> {
                 )
               ],
             ),
+            /*
+             * Author(s) : Manu & Artur & Nicolas
+            */
             Positioned(
-              bottom: 60.0,
-              right: 60.0,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Taskpage()));
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20.0,
-                    vertical: 10.0,
+                bottom: 24.0,
+                right: 0.0,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Taskpage()
+                      ),
+                    );
+                  },
+                  child: Container(
+                      child: Icon(
+                        Icons.add_box_rounded,
+                        size: 72.0,
+                        color: Colors.blue,
+                      )
                   ),
-                  decoration: BoxDecoration(
-                      color: Colors.blueGrey,
-                      borderRadius: BorderRadius.circular(20.0)),
-                  child: const Icon(
-                    Icons.add_to_photos_outlined,
-                    color: Color(0xFFB0BEC5),
-                    size: 36.0,
-                  ),
-                ),
-              ),
-            )
+                )
+            ),
           ]),
         ),
       ),
