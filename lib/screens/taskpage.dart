@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:projetflutter_nam/widgets.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+
+import 'homepage.dart';
 
 class Taskpage extends StatefulWidget {
   const Taskpage({Key? key}) : super(key: key);
@@ -10,9 +13,12 @@ class Taskpage extends StatefulWidget {
 }
 
 class _TaskpageState extends State<Taskpage> {
+  Color myColor = Colors.white;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: myColor,
       body: SafeArea(
           child: Container(
         child: Stack(
@@ -69,33 +75,66 @@ class _TaskpageState extends State<Taskpage> {
                 ToDoWidget("vide", false),
               ],
             ),
-            Positioned(
-              bottom: 60.0,
-              right: 60.0,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Taskpage()));
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20.0,
-                    vertical: 10.0,
+            ]),
+          ),
+      ),
+
+        bottomNavigationBar: BottomAppBar(
+          color: Colors.white70,
+          child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                IconButton(
+                  iconSize: 36.0,
+                  icon: Icon(
+                    Icons.color_lens_outlined,
                   ),
-                  decoration: BoxDecoration(
-                      color: Colors.blueGrey,
-                      borderRadius: BorderRadius.circular(20.0)),
-                  child: const Icon(
-                    Icons.delete_forever_rounded,
-                    color: Color(0xFFB0BEC5),
-                    size: 36.0,
-                  ),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Choisis une couleur'),
+                            content: SingleChildScrollView(
+                              child: ColorPicker(
+                                pickerColor: myColor, //default color
+                                onColorChanged: (Color color) {
+                                  //on color picked
+                                  setState(() {
+                                    myColor = color;
+                                  });
+                                },
+                              ),
+                            ),
+                            actions: <Widget>[
+                              ElevatedButton(
+                                child: const Text('Valider'),
+                                onPressed: () {
+                                  Navigator.of(context)
+                                      .pop(); //dismiss the color picker
+                                },
+                              ),
+                            ],
+                          );
+                        });
+                  },
                 ),
-              ),
-            )
-          ],
-        ),
-      )),
+                IconButton(
+                  iconSize: 36.0,
+                  icon: Icon(Icons.delete_forever_rounded,
+                      color: Colors.redAccent),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Homepage()),
+                    );
+                  },
+                )
+              ]),
+          shape: AutomaticNotchedShape(
+              RoundedRectangleBorder(), StadiumBorder(side: BorderSide())),
+        )
     );
   }
 }
