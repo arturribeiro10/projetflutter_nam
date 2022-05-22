@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:projetflutter_nam/widgets.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 import 'homepage.dart';
 
@@ -14,6 +17,9 @@ class Taskpage extends StatefulWidget {
 
 class _TaskpageState extends State<Taskpage> {
   Color myColor = Colors.white;
+  File? image;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -126,6 +132,43 @@ class _TaskpageState extends State<Taskpage> {
                   },
                 ),
                 IconButton(
+                  icon: Icon(Icons.image),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Importer une image'),
+                            actions: <Widget>[
+                              MaterialButton(
+                                  child: Icon(Icons.image),
+                                  onPressed: () {
+                                    pickImageGallery();
+                                  }),
+                              MaterialButton(
+                                  child: Icon(Icons.camera_alt),
+                                  onPressed: () {
+                                    pickImageCamera();
+                                  }),
+                              MaterialButton(
+                                child: Icon(Icons.close),
+                                onPressed: () {
+                                  Navigator.of(context)
+                                      .pop(); //dismiss the color picker
+                                },
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              image != null
+                                  ? Image.file(image!)
+                                  : Text('No image selected')
+                            ],
+                          );
+                        });
+                  },
+                ),
+                IconButton(
                   iconSize: 36.0,
                   icon: Icon(Icons.delete_forever_rounded,
                       color: Colors.redAccent),
@@ -143,4 +186,33 @@ class _TaskpageState extends State<Taskpage> {
         )
     );
   }
+
+
+  //Méthodes pour l'image picker
+  Future pickImageGallery() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+      if(image == null) return;
+
+      final imageTemp = File(image.path);
+      setState(() => this.image = imageTemp);
+    } on PlatformException catch(e){
+      print('pas pu récup l image: $e');
+    }
+  }
+
+  Future pickImageCamera() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.camera);
+
+      if(image == null) return;
+
+      final imageTemp = File(image.path);
+      setState(() => this.image = imageTemp);
+    } on PlatformException catch(e){
+      print('pas pu récup l image: $e');
+    }
+  }
 }
+
