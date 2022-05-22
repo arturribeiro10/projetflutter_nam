@@ -43,17 +43,19 @@ class _TaskpageState extends State<Taskpage> {
             child: Stack(
                 children: [
               Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   image != null
                       ? Image.file(
                           image!,
-                          width: 600,
-                          height: 300,
+                          width: 275,
+                          height: 275,
                         )
-                      : FlutterLogo(size: 160),
+                      : Text('No image selected'),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 24.0),
+                    padding: const EdgeInsets.only(
+                        top: 17.0,
+                        bottom: 6.0,),
                     child: Row(
                       children: [
                         GestureDetector(
@@ -98,6 +100,7 @@ class _TaskpageState extends State<Taskpage> {
                     ),
                   ),
                   ToDoWidget("vide", true),
+                  ToDoWidget("vide", false),
                   ToDoWidget("vide", false),
                 ],
               ),
@@ -198,3 +201,12 @@ class _TaskpageState extends State<Taskpage> {
         ));
   }
 }
+
+/*
+ * Author : Nicolas
+ *  BottomAppBar
+ *  Colopicker feature
+ *  ImagePicker feature + Méthode PickImage();
+ *  CreateButton
+ *  + changement visuelle/graphique de la page
+ */

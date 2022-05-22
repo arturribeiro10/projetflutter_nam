@@ -15,10 +15,6 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /*
-      * Author(s) : Nicolas Corminboeuf
-      * AppBar with searchBar
-      */
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.search),
@@ -30,9 +26,6 @@ class _HomepageState extends State<Homepage> {
           },
         ),
       ),
-      /*
-      * Author(s) : Artur Ribeiro
-      */
       body: SafeArea(
         child: Container(
           width: double.infinity,
@@ -67,9 +60,6 @@ class _HomepageState extends State<Homepage> {
                 )
               ],
             ),
-            /*
-             * Author(s) : Manu & Artur & Nicolas
-            */
             Positioned(
                 bottom: 24.0,
                 right: 0.0,
@@ -175,3 +165,13 @@ class CustomSearchDelegate extends SearchDelegate {
   }
 }
 
+/*
+ * Author : Nicolas
+ *  AppBar avec la barre de recherche
+ *  Méthodes de "comportement" de la searchBar
+ *  + changement visuelle/graphique de la page
+ */
+
+/*
+ * Author : Artur
+ */
