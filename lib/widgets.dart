@@ -25,7 +25,8 @@ class TaskCardWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            title ?? "(unnamed task)",
+            //title ?? "(unnamed task)",
+            title,
             style: const TextStyle(
               color: Colors.blueGrey,
               fontSize: 22.0,
@@ -37,7 +38,8 @@ class TaskCardWidget extends StatelessWidget {
               top: 10.0,
             ),
             child: Text(
-              desc ?? "no description added",
+              //desc ?? "no description added",
+              desc,
               style: const TextStyle(
                 fontSize: 16.0,
                 color: Colors.blueGrey,
@@ -79,10 +81,10 @@ class ToDoWidget extends StatelessWidget {
               color: Colors.blueGrey,
               size: 24.0,
             ),
-
           ),
           Text(
-            text ?? "Entrer un élément à effectuer",
+            //text ?? "Entrer un élément à effectuer",
+            text,
           style: const TextStyle(
             //color: Colors.blueGrey,
             fontSize: 16.0,

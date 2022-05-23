@@ -3,13 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:projetflutter_nam/widgets.dart';
 
 class Taskpage extends StatefulWidget {
-  const Taskpage({Key? key}) : super(key: key);
+  const Taskpage({Key? key, required this.id}) : super(key: key);
+  final int id;
 
   @override
   State<Taskpage> createState() => _TaskpageState();
 }
 
 class _TaskpageState extends State<Taskpage> {
+
+  String _taskTitle = '';
+
+  void initState(){
+    print("ID de la tâche: ${widget.id}");
+    if(widget.id != null){
+      _taskTitle = "nouveau";
+    }
+
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,13 +49,16 @@ class _TaskpageState extends State<Taskpage> {
                           ),
                         ),
                       ),
-                      const Expanded(
+                       Expanded(
                           child: TextField(
-                        decoration: InputDecoration(
+                            onSubmitted: (value){
+                              print("nom de la tâche: $value");
+                            },
+                        decoration: const InputDecoration(
                           hintText: "Entrer le titre de la tâche",
                           border: InputBorder.none,
                         ),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 26.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.blueGrey,
@@ -52,12 +67,13 @@ class _TaskpageState extends State<Taskpage> {
                     ],
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(
+                Padding(
+                  padding: const EdgeInsets.only(
                     bottom: 8.0,
                   ),
                   child: TextField(
-                    decoration: InputDecoration(
+                    controller: TextEditingController()..text = _taskTitle,
+                    decoration: const InputDecoration(
                         hintText: "Entrer le description de la tâche",
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.symmetric(
@@ -65,8 +81,41 @@ class _TaskpageState extends State<Taskpage> {
                         )),
                   ),
                 ),
-                ToDoWidget("vide", true),
-                ToDoWidget("vide", false),
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24.0,
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 20.0,
+                            height: 20.0,
+                            margin: const EdgeInsets.only(
+                              right: 12.0,
+                            ),
+                            child: const Icon(
+                              Icons.check_box_outline_blank,
+                              color: Colors.blueGrey,
+                              size: 24.0,
+                            ),
+                          ),
+                          Expanded(
+                              child: TextField(
+                                onSubmitted: (value){
+                                },
+                                decoration: const InputDecoration(
+                                  hintText: "Entrer un élément à faire...",
+                                  border: InputBorder.none,
+                                ),
+                              ))
+                        ],
+                      ),
+                    )
+                  ],
+                )
+
               ],
             ),
             Positioned(
@@ -75,7 +124,7 @@ class _TaskpageState extends State<Taskpage> {
               child: GestureDetector(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Taskpage()));
+                      MaterialPageRoute(builder: (context) => Taskpage(id: 0,)));
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(
