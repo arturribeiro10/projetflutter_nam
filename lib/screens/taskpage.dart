@@ -195,7 +195,8 @@ class _TaskpageState extends State<Taskpage> {
                 );
               },
             )
-          ]),
+          ]
+          ),
           shape: AutomaticNotchedShape(
               RoundedRectangleBorder(), StadiumBorder(side: BorderSide())),
         ));
