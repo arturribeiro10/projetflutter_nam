@@ -47,14 +47,47 @@ class _HomepageState extends State<Homepage> {
                 Expanded(
                   child: ListView(
                     children: [
-                      TaskCardWidget(
-                          title: "Get Started",
-                          desc: "hello user - description"),
-                      TaskCardWidget(
-                        title: "vide",
-                        desc: "vide",
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Taskpage(id: 0,)
+                              )
+                          );
+                        },
+                        child: TaskCardWidget(
+                            title: "Première tâche",
+                            desc: "mettre en place flutter"),
                       ),
-                      TaskCardWidget(title: "vifde", desc: "dafdesc")
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Taskpage(id: 1,)
+                              )
+                          );
+                        },
+                        child: TaskCardWidget(
+                          title: "Deuxième tâche",
+                          desc: "créer unt tâche",
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Taskpage(id: 2,)
+                              )
+                          );
+                        },
+                        child: TaskCardWidget(
+                            title: "Troisième tâche",
+                            desc: "rendre les tâches dynamiques"
+                        ),
+                      ),
                     ],
                   ),
                 )
@@ -68,7 +101,7 @@ class _HomepageState extends State<Homepage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => Taskpage()
+                          builder: (context) => Taskpage(id: 0,)
                       ),
                     );
                   },

@@ -9,7 +9,8 @@ import 'dart:io';
 import 'homepage.dart';
 
 class Taskpage extends StatefulWidget {
-  const Taskpage({Key? key}) : super(key: key);
+  const Taskpage({Key? key, required this.id}) : super(key: key);
+  final int id;
 
   @override
   State<Taskpage> createState() => _TaskpageState();
@@ -18,6 +19,17 @@ class Taskpage extends StatefulWidget {
 class _TaskpageState extends State<Taskpage> {
   Color myColor = Colors.white;
   File? image;
+
+  String _taskTitle = '';
+
+  void initState(){
+    print("ID de la tâche: ${widget.id}");
+    if(widget.id != null){
+      _taskTitle = "nouveau";
+    }
+
+    super.initState();
+  }
 
   //Méthodes pour l'image picker
   Future pickImage(ImageSource source) async {
@@ -71,8 +83,11 @@ class _TaskpageState extends State<Taskpage> {
                             ),
                           ),
                         ),
-                        const Expanded(
+                        Expanded(
                             child: TextField(
+                              onSubmitted: (value){
+                                print("nom de la tâche: $value");
+                              },
                           decoration: InputDecoration(
                             hintText: "Entrer le titre de la tâche",
                             border: InputBorder.none,
@@ -99,9 +114,40 @@ class _TaskpageState extends State<Taskpage> {
                           )),
                     ),
                   ),
-                  ToDoWidget("vide", true),
-                  ToDoWidget("vide", false),
-                  ToDoWidget("vide", false),
+                  Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24.0,
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 20.0,
+                              height: 20.0,
+                              margin: const EdgeInsets.only(
+                                right: 12.0,
+                              ),
+                              child: const Icon(
+                                Icons.check_box_outline_blank,
+                                color: Colors.blueGrey,
+                                size: 24.0,
+                              ),
+                            ),
+                            Expanded(
+                                child: TextField(
+                                  onSubmitted: (value){
+                                  },
+                                  decoration: const InputDecoration(
+                                    hintText: "Entrer un élément à faire...",
+                                    border: InputBorder.none,
+                                  ),
+                                ))
+                          ],
+                        ),
+                      )
+                    ],
+                  )
                 ],
               ),
             ]),
