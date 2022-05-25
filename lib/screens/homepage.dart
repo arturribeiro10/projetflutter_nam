@@ -121,11 +121,6 @@ class _HomepageState extends State<Homepage> {
   }
 }
 
-      /*
-      * Author(s) : Nicolas Corminboeuf
-      * Class qui gère les comportements de la searchBar
-      * TODO : faire en sorte que les suggestions de recherche soit les tags que le user valide dans des tâches
-      */
 class CustomSearchDelegate extends SearchDelegate {
   List<String> searchTerms = [
     'Mangue',
