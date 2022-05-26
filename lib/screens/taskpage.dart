@@ -18,9 +18,13 @@ class Taskpage extends StatefulWidget {
 }
 
 class _TaskpageState extends State<Taskpage> {
+  //attribut colorPicker
   Color myColor = Colors.white;
+  //attribut ImagePicker
   File? image;
+  //attributs Date & Time Picker
   DateTime date = DateTime.now();
+  TimeOfDay time = TimeOfDay(hour: 10, minute: 30);
 
 
   String _taskTitle = '';
@@ -52,6 +56,8 @@ class _TaskpageState extends State<Taskpage> {
 
   @override
   Widget build(BuildContext context) {
+    final hours = time.hour.toString().padLeft(2, '0');
+    final minutes = time.minute.toString().padLeft(2, '0');
     return Scaffold(
         backgroundColor: myColor,
         body: SafeArea(
@@ -227,14 +233,13 @@ class _TaskpageState extends State<Taskpage> {
                           ElevatedButton(
                             child: Icon(Icons.more_time),
                             onPressed: () async {
-                              DateTime? newDate = await showDatePicker(
-                                context: context,
-                                initialDate: date,
-                                firstDate: DateTime(2022),
-                                lastDate: DateTime(2100),
+                              TimeOfDay? newTime = await showTimePicker(
+                                  context: context,
+                                  initialTime: time,
                               );
-                              if (newDate == null) return;
-                              setState(() => date = newDate);
+                              if(newTime == null) return;
+
+                              setState(() => time = newTime);
                             },
                           ),
                           SizedBox(
