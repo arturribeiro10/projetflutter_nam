@@ -73,7 +73,7 @@ class _TaskpageState extends State<Taskpage> {
                           width: 275,
                           height: 275,
                         )
-                      : Text('No image selected'),
+                      : Text(''),
                   Padding(
                     padding: const EdgeInsets.only(
                         top: 17.0,
@@ -209,6 +209,7 @@ class _TaskpageState extends State<Taskpage> {
               },
             ),
             IconButton(
+              iconSize: 36.0,
               icon: Icon(Icons.calendar_month),
               onPressed: () {
                 showDialog(
@@ -216,6 +217,8 @@ class _TaskpageState extends State<Taskpage> {
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: Text('Sélectionner une date'),
+                          content: Text(
+                              'Vous avez choisi : ${date.day}/${date.month}/${date.year} - ${time.hour}:${time.minute}'),
                         actions: <Widget>[
                           ElevatedButton(
                             child: Icon(Icons.calendar_month),
@@ -251,6 +254,7 @@ class _TaskpageState extends State<Taskpage> {
               },
             ),
             IconButton(
+              iconSize: 36.0,
               icon: Icon(Icons.image),
               onPressed: () {
                 showDialog(
