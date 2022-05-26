@@ -112,7 +112,7 @@ class _TaskpageState extends State<Taskpage> {
                       ],
                     ),
                   ),
-                   Padding(
+            Padding(
                     padding: EdgeInsets.only(
                       bottom: 8.0,
                     ),
@@ -160,7 +160,18 @@ class _TaskpageState extends State<Taskpage> {
                                 ))
                           ],
                         ),
-                      )
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 25,top: 25,),
+                        child: Row(
+                          children:[
+                            Text('Date de fin : ${date.day}/${date.month}/${date.year} - ${time.hour}:${time.minute}',
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                )),
+                          ],
+                        ),
+                      ),
                     ],
                   )
                 ],
