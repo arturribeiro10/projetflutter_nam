@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:projetflutter_nam/widgets.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-
 import 'homepage.dart';
+import 'package:date_format/date_format.dart';
 
 class Taskpage extends StatefulWidget {
   const Taskpage({Key? key, required this.id}) : super(key: key);
@@ -17,8 +18,14 @@ class Taskpage extends StatefulWidget {
 }
 
 class _TaskpageState extends State<Taskpage> {
+  //attribut colorPicker
   Color myColor = Colors.white;
+  //attribut ImagePicker
   File? image;
+  //attributs Date & Time Picker
+  DateTime date = DateTime.now();
+  TimeOfDay time = TimeOfDay(hour: 10, minute: 30);
+
 
   String _taskTitle = '';
 
@@ -30,6 +37,7 @@ class _TaskpageState extends State<Taskpage> {
 
     super.initState();
   }
+
 
   //Méthodes pour l'image picker
   Future pickImage(ImageSource source) async {
@@ -48,6 +56,8 @@ class _TaskpageState extends State<Taskpage> {
 
   @override
   Widget build(BuildContext context) {
+    final hours = time.hour.toString().padLeft(2, '0');
+    final minutes = time.minute.toString().padLeft(2, '0');
     return Scaffold(
         backgroundColor: myColor,
         body: SafeArea(
@@ -63,7 +73,7 @@ class _TaskpageState extends State<Taskpage> {
                           width: 275,
                           height: 275,
                         )
-                      : //Text('No image selected'),
+                      : Text(''),
                   Padding(
                     padding: const EdgeInsets.only(
                         top: 17.0,
@@ -205,6 +215,52 @@ class _TaskpageState extends State<Taskpage> {
               },
             ),
             IconButton(
+              iconSize: 36.0,
+              icon: Icon(Icons.calendar_month),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Sélectionner une date'),
+                          content: Text(
+                              'Vous avez choisi : ${date.day}/${date.month}/${date.year} - ${time.hour}:${time.minute}'),
+                        actions: <Widget>[
+                          ElevatedButton(
+                            child: Icon(Icons.calendar_month),
+                            onPressed: () async {
+                              DateTime? newDate = await showDatePicker(
+                                context: context,
+                                initialDate: date,
+                                firstDate: DateTime(2022),
+                                lastDate: DateTime(2100),
+                              );
+                              if (newDate == null) return;
+                              setState(() => date = newDate);
+                            },
+                          ),
+                          ElevatedButton(
+                            child: Icon(Icons.more_time),
+                            onPressed: () async {
+                              TimeOfDay? newTime = await showTimePicker(
+                                  context: context,
+                                  initialTime: time,
+                              );
+                              if(newTime == null) return;
+
+                              setState(() => time = newTime);
+                            },
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                        ],
+                      );
+                    });
+              },
+            ),
+            IconButton(
+              iconSize: 36.0,
               icon: Icon(Icons.image),
               onPressed: () {
                 showDialog(
