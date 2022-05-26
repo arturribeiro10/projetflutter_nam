@@ -63,7 +63,7 @@ class _TaskpageState extends State<Taskpage> {
                           width: 275,
                           height: 275,
                         )
-                      : Text('No image selected'),
+                      : //Text('No image selected'),
                   Padding(
                     padding: const EdgeInsets.only(
                         top: 17.0,
@@ -86,7 +86,7 @@ class _TaskpageState extends State<Taskpage> {
                         Expanded(
                             child: TextField(
                               onSubmitted: (value){
-                                print("nom de la tâche: $value");
+                                print("Titre de la tâche: $value");
                               },
                           decoration: InputDecoration(
                             hintText: "Entrer le titre de la tâche",
@@ -97,15 +97,19 @@ class _TaskpageState extends State<Taskpage> {
                             fontWeight: FontWeight.bold,
                             color: Colors.blueGrey,
                           ),
-                        ))
+                        )
+                        )
                       ],
                     ),
                   ),
-                  const Padding(
+                   Padding(
                     padding: EdgeInsets.only(
                       bottom: 8.0,
                     ),
                     child: TextField(
+                      onSubmitted: (desc){
+                        print("Description de la tâche: $desc");
+                      },
                       decoration: InputDecoration(
                           hintText: "Entrer le description de la tâche",
                           border: InputBorder.none,
@@ -137,6 +141,7 @@ class _TaskpageState extends State<Taskpage> {
                             Expanded(
                                 child: TextField(
                                   onSubmitted: (value){
+                                    print("Element à faire: $value");
                                   },
                                   decoration: const InputDecoration(
                                     hintText: "Entrer un élément à faire...",
@@ -189,6 +194,7 @@ class _TaskpageState extends State<Taskpage> {
                           ElevatedButton(
                             child: const Text('Valider'),
                             onPressed: () {
+                              print(myColor);
                               Navigator.of(context)
                                   .pop(); //dismiss the color picker
                             },

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 class TaskCardWidget extends StatelessWidget {
-  final String title;
-  final String desc;
+  final title;
+  final desc;
+  final color;
 
-  TaskCardWidget({required this.title, required this.desc});
+  TaskCardWidget({required this.title, required this.desc, this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -56,8 +57,7 @@ class ToDoWidget extends StatelessWidget {
   bool isDone;
 
   ToDoWidget(this.text,
-      this.isDone);
-  //ToDoWidget({required this.text, required this.isDone});
+      this.isDone, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +82,8 @@ class ToDoWidget extends StatelessWidget {
 
           ),
           Text(
-            text ?? "Entrer un élément à effectuer",
+            //text ?? "Entrer un élément à effectuer",
+            text,
           style: const TextStyle(
             //color: Colors.blueGrey,
             fontSize: 16.0,

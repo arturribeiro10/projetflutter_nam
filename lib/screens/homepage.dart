@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:projetflutter_nam/screens/taskpage.dart';
 import 'package:projetflutter_nam/widgets.dart';
+import 'dart:async';
 
 class Homepage extends StatefulWidget {
   const Homepage({Key? key}) : super(key: key);
@@ -12,6 +14,9 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  final Stream<QuerySnapshot> _tasksStream =
+      FirebaseFirestore.instance.collection('taches').snapshots();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,52 +49,28 @@ class _HomepageState extends State<Homepage> {
                     bottom: 32.0,
                   ),
                 ),
-                Expanded(
-                  child: ListView(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Taskpage(id: 0,)
-                              )
-                          );
-                        },
-                        child: TaskCardWidget(
-                            title: "Première tâche",
-                            desc: "mettre en place flutter"),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Taskpage(id: 1,)
-                              )
-                          );
-                        },
-                        child: TaskCardWidget(
-                          title: "Deuxième tâche",
-                          desc: "créer unt tâche",
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Taskpage(id: 2,)
-                              )
-                          );
-                        },
-                        child: TaskCardWidget(
-                            title: "Troisième tâche",
-                            desc: "rendre les tâches dynamiques"
-                        ),
-                      ),
-                    ],
-                  ),
+                StreamBuilder<QuerySnapshot>(
+                  stream: _tasksStream,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.hasError) {
+                      return const Text('Something went wrong');
+                    }
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Text("Loading");
+                    }
+
+                    return ListView(
+                      shrinkWrap: true,
+                      children:snapshot.data!.docs.map((DocumentSnapshot document) {
+                        Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+                        return TaskCardWidget(
+                          title: data['title'],
+                          desc: data['desc'],
+                        );
+                      }).toList(),
+                    );
+                  },
                 )
               ],
             ),
@@ -101,19 +82,18 @@ class _HomepageState extends State<Homepage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => Taskpage(id: 0,)
-                      ),
+                          builder: (context) => Taskpage(
+                                id: 0,
+                              )),
                     );
                   },
                   child: Container(
                       child: Icon(
-                        Icons.add_box_rounded,
-                        size: 72.0,
-                        color: Colors.blue,
-                      )
-                  ),
-                )
-            ),
+                    Icons.add_box_rounded,
+                    size: 72.0,
+                    color: Colors.blue,
+                  )),
+                )),
           ]),
         ),
       ),
@@ -121,19 +101,13 @@ class _HomepageState extends State<Homepage> {
   }
 }
 
-      /*
+/*
       * Author(s) : Nicolas Corminboeuf
       * Class qui gère les comportements de la searchBar
       * TODO : faire en sorte que les suggestions de recherche soit les tags que le user valide dans des tâches
       */
 class CustomSearchDelegate extends SearchDelegate {
-  List<String> searchTerms = [
-    'Mangue',
-    'Kiwi',
-    'Fraise',
-    'Pomme',
-    'Ananas'
-  ];
+  List<String> searchTerms = ['Mangue', 'Kiwi', 'Fraise', 'Pomme', 'Ananas'];
 
   @override
   //Nettoie la requête
