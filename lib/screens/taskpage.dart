@@ -23,8 +23,10 @@ class _TaskpageState extends State<Taskpage> {
   //attribut ImagePicker
   File? image;
   //attributs Date & Time Picker
-  DateTime date = DateTime.now();
-  TimeOfDay time = TimeOfDay(hour: 10, minute: 30);
+  DateTime? date;
+  TimeOfDay? time;
+  String _date = "";
+  String _time = "";
 
 
   String _taskTitle = '';
@@ -56,8 +58,6 @@ class _TaskpageState extends State<Taskpage> {
 
   @override
   Widget build(BuildContext context) {
-    final hours = time.hour.toString().padLeft(2, '0');
-    final minutes = time.minute.toString().padLeft(2, '0');
     return Scaffold(
         backgroundColor: myColor,
         body: SafeArea(
@@ -164,12 +164,15 @@ class _TaskpageState extends State<Taskpage> {
                       Padding(
                         padding: const EdgeInsets.only(left: 25,top: 25,),
                         child: Row(
-                          children:[
-                            Text('Date de fin : ${date.day}/${date.month}/${date.year} - ${time.hour}:${time.minute}',
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                )),
-                          ],
+                          children: [
+                          Text((() {
+                              if(date == null){
+                                  return "Pas de date de fin";}
+                              return "Date de fin : ${_date} à ${_time}";
+    })())
+
+
+    ],
                         ),
                       ),
                     ],
@@ -188,7 +191,8 @@ class _TaskpageState extends State<Taskpage> {
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         bottomNavigationBar: BottomAppBar(
           color: Colors.white70,
-          child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
+          child: Row(mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
             IconButton(
               iconSize: 36.0,
               icon: Icon(
@@ -234,20 +238,19 @@ class _TaskpageState extends State<Taskpage> {
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: Text('Sélectionner une date'),
-                          content: Text(
-                              'Vous avez choisi : ${date.day}/${date.month}/${date.year} - ${time.hour}:${time.minute}'),
                         actions: <Widget>[
                           ElevatedButton(
                             child: Icon(Icons.calendar_month),
                             onPressed: () async {
                               DateTime? newDate = await showDatePicker(
                                 context: context,
-                                initialDate: date,
+                                initialDate: DateTime.now(),
                                 firstDate: DateTime(2022),
                                 lastDate: DateTime(2100),
                               );
                               if (newDate == null) return;
                               setState(() => date = newDate);
+                              _date = "${newDate.day.toString().padLeft(2,'0')}-${newDate.month.toString().padLeft(2,'0')}-${newDate.year.toString()}";
                             },
                           ),
                           ElevatedButton(
@@ -255,11 +258,12 @@ class _TaskpageState extends State<Taskpage> {
                             onPressed: () async {
                               TimeOfDay? newTime = await showTimePicker(
                                   context: context,
-                                  initialTime: time,
+                                  initialTime: TimeOfDay.now(),
                               );
                               if(newTime == null) return;
 
                               setState(() => time = newTime);
+                              _time = "${newTime.hour}:${newTime.minute}";
                             },
                           ),
                           SizedBox(
@@ -290,12 +294,6 @@ class _TaskpageState extends State<Taskpage> {
                               onPressed: () {
                                 pickImage(ImageSource.camera);
                               }),
-                          MaterialButton(
-                            child: Icon(Icons.close),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
                           SizedBox(
                             width: 20,
                           ),
