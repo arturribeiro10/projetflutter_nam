@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
 class TaskCardWidget extends StatelessWidget {
+  final id;
   final title;
   final desc;
   late final color;
+  late final date;
+  late final time;
 
-  TaskCardWidget({required this.title, required this.desc, this.color = const Color(0xFFFFFFFF)});
+  TaskCardWidget({required this.title, required this.desc, this.color, this.id, this.date, this.time});
 
   @override
   Widget build(BuildContext context) {
@@ -55,11 +58,11 @@ class TaskCardWidget extends StatelessWidget {
 }
 
 class ToDoWidget extends StatelessWidget {
-  String text;
-  bool isDone;
+  final text;
+  bool isDone = false;
+  final fktache;
 
-  ToDoWidget(this.text,
-      this.isDone, {Key? key}) : super(key: key);
+  ToDoWidget({this.text, required this.isDone, this.fktache});
 
   @override
   Widget build(BuildContext context) {

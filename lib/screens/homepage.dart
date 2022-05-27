@@ -16,6 +16,8 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   final Stream<QuerySnapshot> _tasksStream =
       FirebaseFirestore.instance.collection('taches').snapshots();
+  final Stream<QuerySnapshot> _todoStream =
+  FirebaseFirestore.instance.collection('todo').snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -64,10 +66,31 @@ class _HomepageState extends State<Homepage> {
                       shrinkWrap: true,
                       children:snapshot.data!.docs.map((DocumentSnapshot document) {
                         Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-                        return TaskCardWidget(
-                          title: data['title'],
-                          desc: data['desc'],
-                          color: data['color'],
+                        return
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>  Taskpage(
+                                          id: document.id,
+                                          title: document.get('title'),
+                                          desc: document.get('desc'),
+                                          color: document.get('color'),
+                                          date: document.get('date'),
+                                          time: document.get('time'),
+                                          image: document.get('image'),
+                                      ),
+                                  )
+                              );
+                            },
+                            child: TaskCardWidget(
+                              id: data['id'],
+                              title: data['title'],
+                              desc: data['desc'],
+                              color: data['color'],
+                          ),
+
                         );
                       }).toList(),
                     );
