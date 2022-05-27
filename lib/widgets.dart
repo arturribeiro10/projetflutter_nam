@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 class TaskCardWidget extends StatelessWidget {
   final title;
   final desc;
-  final color;
+  late final color;
 
-  TaskCardWidget({required this.title, required this.desc, this.color});
+  TaskCardWidget({required this.title, required this.desc, this.color = const Color(0xFFFFFFFF)});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,9 @@ class TaskCardWidget extends StatelessWidget {
         bottom: 20.0,
       ),
       decoration: BoxDecoration(
-          color: Colors.white,
+          //color : Color(0xB00F0FFF),
+          //color: Color(color) ?? Colors.white,
+          color: Color(int.parse(color)),
           borderRadius: BorderRadius.circular(20.0)
       ),
       child: Column(

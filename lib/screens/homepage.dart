@@ -67,6 +67,7 @@ class _HomepageState extends State<Homepage> {
                         return TaskCardWidget(
                           title: data['title'],
                           desc: data['desc'],
+                          color: data['color'],
                         );
                       }).toList(),
                     );
