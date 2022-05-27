@@ -1,13 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:projetflutter_nam/widgets.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'homepage.dart';
-import 'package:date_format/date_format.dart';
 
 class Taskpage extends StatefulWidget {
   const Taskpage({Key? key, required this.id}) : super(key: key);
@@ -162,17 +160,19 @@ class _TaskpageState extends State<Taskpage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 25,top: 25,),
+                        padding: const EdgeInsets.only(
+                          left: 25,
+                          top: 25,
+                        ),
                         child: Row(
                           children: [
-                          Text((() {
-                              if(date == null){
-                                  return "Pas de date de fin";}
-                              return "Date de fin : ${_date} à ${_time}";
-    })())
-
-
-    ],
+                            Text((() {
+                              if (date == null) {
+                                return "Pas de date de fin";
+                              }
+                              return "Date de fin : ${_date}  ${_time}";
+                            })())
+                          ],
                         ),
                       ),
                     ],
