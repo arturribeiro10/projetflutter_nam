@@ -60,9 +60,11 @@ class TaskCardWidget extends StatelessWidget {
 class ToDoWidget extends StatelessWidget {
   final text;
   bool isDone = false;
-  final fktache;
 
-  ToDoWidget({this.text, required this.isDone, this.fktache});
+  Function onChange;
+
+
+  ToDoWidget({this.text, required this.isDone, required this.onChange});
 
   @override
   Widget build(BuildContext context) {
@@ -73,19 +75,22 @@ class ToDoWidget extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Container(
-            width: 20.0,
-            height: 20.0,
-            margin: const EdgeInsets.only(
-              right: 12.0,
-            ),
-            child: Icon(
-              isDone ? Icons.check_box : Icons.check_box_outline_blank,
-              color: Colors.blueGrey,
-              size: 24.0,
-            ),
+         GestureDetector(
+           child: Container(
+             width: 20.0,
+             height: 20.0,
+             margin: const EdgeInsets.only(
+               right: 12.0,
+             ),
+             child: Icon(
+               isDone ? Icons.check_box : Icons.check_box_outline_blank,
+               color: Colors.blueGrey,
+               size: 24.0,
+             ),
 
-          ),
+           ),
+           onTap: () => onChange(),
+         ),
           Text(
             //text ?? "Entrer un élément à effectuer",
             text,

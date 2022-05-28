@@ -81,8 +81,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
           child: Container(
             child: Stack(
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  ListView(
                     children: [
                       image != null
                           ? Image.file(

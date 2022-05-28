@@ -12,7 +12,17 @@ import 'dart:io';
 import 'homepage.dart';
 
 class Taskpage extends StatefulWidget {
-  Taskpage({Key? key, required this.id, this.title, this.desc, this.color, this.date, this.time, this.image}) : super(key: key);
+  Taskpage(
+      {Key? key,
+      required this.id,
+      this.title,
+      this.desc,
+      this.color,
+      this.date,
+      this.time,
+      this.image,
+      this.todolist})
+      : super(key: key);
   final id;
   final title;
   final desc;
@@ -20,18 +30,15 @@ class Taskpage extends StatefulWidget {
   final date;
   final time;
   final image;
-
-
-
+  final List<dynamic>? todolist;
 
   @override
   State<Taskpage> createState() => _TaskpageState();
 }
 
 class _TaskpageState extends State<Taskpage> {
-
   final Stream<QuerySnapshot> _tasksStream =
-  FirebaseFirestore.instance.collection('todo').snapshots();
+      FirebaseFirestore.instance.collection('todo').snapshots();
 
   final fktache = FirebaseFirestore.instance.collection("taches");
 
@@ -40,46 +47,57 @@ class _TaskpageState extends State<Taskpage> {
 
   //attribut colorPicker
   Color myColor = Colors.white;
-  //attribut ImagePicker
-  File? image;
+
+  //attribut
+  Uint8List? imageUser;
+
   //attributs Date & Time Picker
   DateTime? date;
   TimeOfDay? time;
   String _date = "";
   String _time = "";
 
+  List<dynamic>? todolist;
 
   String _taskTitle = '';
 
-  void initState(){
+  void initState() {
     print("ID de la tâche: ${widget.id}");
     print("Titre de la tâhe: ${widget.title}");
     print("Description de la tâhe: ${widget.desc}");
     print("Couleur de la tâhe: ${widget.color}");
     print("Date de la tâhe: ${widget.date}");
     print("Heure de la tâhe: ${widget.time}");
-    if(widget.id != null){
+    print("Image de la tâhe: ${widget.image}");
+    print("imageUser:  $imageUser");
+    if (widget.id != null) {
       _taskTitle = "nouveau";
     }
+
+    if (widget.image != null) {
+      imageUser = base64Decode(widget.image);
+    } else {
+      imageUser = null;
+    }
+
+    todolist = widget.todolist;
 
     super.initState();
   }
 
-
   //Méthodes pour l'image picker
   Future pickImage(ImageSource source) async {
     try {
-      final image = await ImagePicker().pickImage(source: source);
+      final image = await ImagePicker().pickImage(source: source, maxHeight: 250, maxWidth: 250);
 
       if (image == null) return;
 
-      final imageTemp = File(image.path);
-      setState(() => this.image = imageTemp);
+      Uint8List imageBytes = await image.readAsBytes();
+      setState(() => {imageUser = imageBytes});
     } on PlatformException catch (e) {
       print('Impossible de recuprer l"image: $e');
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -88,22 +106,21 @@ class _TaskpageState extends State<Taskpage> {
         backgroundColor: Color(int.parse('${widget.color}')),
         body: SafeArea(
           child: Container(
-            child: Stack(
+            child: Stack(children: [
+              ListView(
                 children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  image != null
-                      ? Image.file(
-                          image!,
+                  imageUser != null
+                      ? Image.memory(
+                          imageUser!,
                           width: 275,
                           height: 275,
                         )
                       : Text(''),
                   Padding(
                     padding: const EdgeInsets.only(
-                        top: 17.0,
-                        bottom: 6.0,),
+                      top: 17.0,
+                      bottom: 6.0,
+                    ),
                     child: Row(
                       children: [
                         GestureDetector(
@@ -121,9 +138,9 @@ class _TaskpageState extends State<Taskpage> {
                         ),
                         Expanded(
                             child: TextField(
-                              onSubmitted: (value){
-                                print("Titre de la tâche: $value");
-                              },
+                          onSubmitted: (value) {
+                            print("Titre de la tâche: $value");
+                          },
                           decoration: InputDecoration(
                             //hintText: "Entrer le titre de la tâche",
                             hintText: "${widget.title}",
@@ -134,17 +151,16 @@ class _TaskpageState extends State<Taskpage> {
                             fontWeight: FontWeight.bold,
                             color: Colors.blueGrey,
                           ),
-                        )
-                        )
+                        ))
                       ],
                     ),
                   ),
-            Padding(
+                  Padding(
                     padding: EdgeInsets.only(
                       bottom: 8.0,
                     ),
                     child: TextField(
-                      onSubmitted: (desc){
+                      onSubmitted: (desc) {
                         print("Description de la tâche: $desc");
                       },
                       decoration: InputDecoration(
@@ -191,29 +207,23 @@ class _TaskpageState extends State<Taskpage> {
                         ),
                         */
                       ),
-                      StreamBuilder<QuerySnapshot>(
-                        stream: _tasksStream,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<QuerySnapshot> snapshot) {
-                          if (snapshot.hasError) {
-                            return const Text('Something went wrong');
-                          }
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return const Text("Loading");
-                          }
-                          return ListView(
+
+                          todolist != null ? ListView(
                             shrinkWrap: true,
-                            children:snapshot.data!.docs.map((DocumentSnapshot document) {
-                              Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+                            children: todolist!
+                                .map((data) {
                               return ToDoWidget(
-                                    isDone: data['isdone'],
-                                    text: data['etape'],
-                                    fktache: data['fktache'],
-                                  );
+                                isDone: data['isdone'],
+                                text: data['etape'],
+                                onChange:() => setState(() {
+                                  data['isdone'] = !data['isdone'];
+                                }),
+
+                              );
                             }).toList(),
-                          );
-                        },
-                      ),
+                          ) : Container(),
+
+
                       Padding(
                         padding: const EdgeInsets.only(
                           left: 25,
@@ -248,8 +258,7 @@ class _TaskpageState extends State<Taskpage> {
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         bottomNavigationBar: BottomAppBar(
           color: Colors.white70,
-          child: Row(mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
+          child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
             IconButton(
               iconSize: 36.0,
               icon: Icon(
@@ -307,17 +316,18 @@ class _TaskpageState extends State<Taskpage> {
                               );
                               if (newDate == null) return;
                               setState(() => date = newDate);
-                              _date = "${newDate.day.toString().padLeft(2,'0')}-${newDate.month.toString().padLeft(2,'0')}-${newDate.year.toString()}";
+                              _date =
+                                  "${newDate.day.toString().padLeft(2, '0')}-${newDate.month.toString().padLeft(2, '0')}-${newDate.year.toString()}";
                             },
                           ),
                           ElevatedButton(
                             child: Icon(Icons.more_time),
                             onPressed: () async {
                               TimeOfDay? newTime = await showTimePicker(
-                                  context: context,
-                                  initialTime: TimeOfDay.now(),
+                                context: context,
+                                initialTime: TimeOfDay.now(),
                               );
-                              if(newTime == null) return;
+                              if (newTime == null) return;
 
                               setState(() => time = newTime);
                               _time = "${newTime.hour}:${newTime.minute}";
@@ -369,11 +379,24 @@ class _TaskpageState extends State<Taskpage> {
                 );
               },
             )
-          ]
-          ),
+          ]),
           shape: AutomaticNotchedShape(
               RoundedRectangleBorder(), StadiumBorder(side: BorderSide())),
         ));
+  }
+
+  static String? bytesToBase64(Uint8List? bytes) {
+    if (bytes == null) {
+      return null;
+    }
+    return base64Encode(bytes);
+  }
+
+  static Uint8List? base64ToBytes(String base64) {
+    if (base64.isEmpty) {
+      return null;
+    }
+    return base64Decode(base64);
   }
 }
 

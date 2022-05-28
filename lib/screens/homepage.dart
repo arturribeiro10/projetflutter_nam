@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,8 +20,7 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   final Stream<QuerySnapshot> _tasksStream =
       FirebaseFirestore.instance.collection('taches').snapshots();
-  final Stream<QuerySnapshot> _todoStream =
-  FirebaseFirestore.instance.collection('todo').snapshots();
+
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +83,7 @@ class _HomepageState extends State<Homepage> {
                                           date: document.get('date'),
                                           time: document.get('time'),
                                           image: document.get('image'),
+                                          todolist: document.get('todolist')
                                       ),
                                   )
                               );
