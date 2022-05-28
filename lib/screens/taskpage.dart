@@ -109,6 +109,13 @@ class _TaskpageState extends State<Taskpage> {
             child: Stack(children: [
               ListView(
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top:10
+                    ),
+                  ),
+                  //La condition nulle est valable pour la newTaskPage mais pas pour l'update -> crash l'appli
+                  // TODO faire une condition NULL avec l'image FIREBASE
                   imageUser != null
                       ? Image.memory(
                           imageUser!,

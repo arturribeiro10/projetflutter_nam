@@ -81,6 +81,11 @@ class _NewTaskPageState extends State<NewTaskPage> {
           child: Container(
             child: Stack(
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top:10
+                    ),
+                  ),
                   ListView(
                     children: [
                       image != null
