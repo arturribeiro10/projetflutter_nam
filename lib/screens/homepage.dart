@@ -6,6 +6,8 @@ import 'package:projetflutter_nam/screens/taskpage.dart';
 import 'package:projetflutter_nam/widgets.dart';
 import 'dart:async';
 
+import 'newtaskpage.dart';
+
 class Homepage extends StatefulWidget {
   const Homepage({Key? key}) : super(key: key);
 
@@ -106,8 +108,7 @@ class _HomepageState extends State<Homepage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => Taskpage(
-                                id: 0,
+                          builder: (context) => NewTaskPage(
                               )),
                     );
                   },
