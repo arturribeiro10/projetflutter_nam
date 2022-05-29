@@ -79,7 +79,7 @@ class _HomepageState extends State<Homepage> {
                                           id: document.id,
                                           title: document.get('title'),
                                           desc: document.get('desc'),
-                                          color: document.get('color'),
+                                          color: data['color'] != null ? Color(data['color']) : Colors.white,
                                           date: document.get('date'),
                                           time: document.get('time'),
                                           image: document.get('image'),
@@ -92,7 +92,7 @@ class _HomepageState extends State<Homepage> {
                               id: data['id'],
                               title: data['title'],
                               desc: data['desc'],
-                              color: data['color'],
+                              color: data['color'] != null ? Color(data['color']) : Colors.white,
                           ),
 
                         );
@@ -164,9 +164,9 @@ class CustomSearchDelegate extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     List<String> matchQuery = [];
-    for (var fruit in searchTerms) {
-      if (fruit.toLowerCase().contains(query.toLowerCase())) {
-        matchQuery.add(fruit);
+    for (var tags in searchTerms) {
+      if (tags.toLowerCase().contains(query.toLowerCase())) {
+        matchQuery.add(tags);
       }
     }
     return ListView.builder(

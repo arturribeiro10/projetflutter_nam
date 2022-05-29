@@ -4,11 +4,11 @@ class TaskCardWidget extends StatelessWidget {
   final id;
   final title;
   final desc;
-  late final color;
+  late final Color color;
   late final date;
   late final time;
 
-  TaskCardWidget({required this.title, required this.desc, this.color, this.id, this.date, this.time});
+  TaskCardWidget({required this.title, required this.desc, required this.color, this.id, this.date, this.time});
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +22,7 @@ class TaskCardWidget extends StatelessWidget {
         bottom: 20.0,
       ),
       decoration: BoxDecoration(
-          //color : Color(0xB00F0FFF),
-          //color: Color(color) ?? Colors.white,
-          color: Color(int.parse(color)),
+          color: color,
           borderRadius: BorderRadius.circular(20.0)
       ),
       child: Column(

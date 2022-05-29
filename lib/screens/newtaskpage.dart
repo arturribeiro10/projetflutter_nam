@@ -12,17 +12,27 @@ import 'dart:io';
 import 'homepage.dart';
 
 class NewTaskPage extends StatefulWidget {
-  NewTaskPage({Key? key, this.id, this.title, this.desc, this.color, this.date, this.time, this.image}) : super(key: key);
-  final id;
+  NewTaskPage({Key? key, this.id, this.title, this.desc, this.color = Colors.white, this.date, this.time, this.image, this.todolist}) : super(key: key);
+  var id;
   final title;
   final desc;
   final color;
   final date;
   final time;
   final image;
+  final List<dynamic>? todolist;
 
 
-
+  Map<String, dynamic> toJson() =>{
+    'id': id,
+    'title': title,
+    'desc': desc,
+    'color': color.value,
+    'image': image,
+    'date': date,
+    'time': time,
+    'todolist': todolist,
+  };
 
   @override
   State<NewTaskPage> createState() => _NewTaskPageState();
@@ -30,18 +40,26 @@ class NewTaskPage extends StatefulWidget {
 
 class _NewTaskPageState extends State<NewTaskPage> {
 
+  final controllerTitle = TextEditingController();
+  final controllerDescription = TextEditingController();
+
   //attribut colorPicker
   Color myColor = Colors.white;
   //attribut ImagePicker
-  File? image;
+  //attribut
+  Uint8List? imageUser;
   //attributs Date & Time Picker
   DateTime? date;
   TimeOfDay? time;
   String _date = "";
   String _time = "";
 
+  String? valueString;
 
-  String _taskTitle = '';
+  List<dynamic>? todolist;
+
+  final controllerEtape = TextEditingController();
+
 
   void initState(){
     print("ID de la tâche: ${widget.id}");
@@ -50,9 +68,10 @@ class _NewTaskPageState extends State<NewTaskPage> {
     print("Couleur de la tâhe: ${widget.color}");
     print("Date de la tâhe: ${widget.date}");
     print("Heure de la tâhe: ${widget.time}");
-    if(widget.id != null){
-      _taskTitle = "nouveau";
-    }
+
+    todolist = widget.todolist ?? [];
+
+    myColor= widget.color;
 
     super.initState();
   }
@@ -61,22 +80,20 @@ class _NewTaskPageState extends State<NewTaskPage> {
   //Méthodes pour l'image picker
   Future pickImage(ImageSource source) async {
     try {
-      final image = await ImagePicker().pickImage(source: source);
+      final image = await ImagePicker().pickImage(source: source, maxHeight: 250, maxWidth: 250);
 
       if (image == null) return;
 
-      final imageTemp = File(image.path);
-      setState(() => this.image = imageTemp);
+      Uint8List imageBytes = await image.readAsBytes();
+      setState(() => {imageUser = imageBytes});
     } on PlatformException catch (e) {
       print('Impossible de recuprer l"image: $e');
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: myColor,
         body: SafeArea(
           child: Container(
             child: Stack(
@@ -88,9 +105,9 @@ class _NewTaskPageState extends State<NewTaskPage> {
                   ),
                   ListView(
                     children: [
-                      image != null
-                          ? Image.file(
-                        image!,
+                      imageUser != null
+                          ? Image.memory(
+                        imageUser!,
                         width: 275,
                         height: 275,
                       )
@@ -123,6 +140,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                                     hintText: "Entrer le titre de la tâche",
                                     border: InputBorder.none,
                                   ),
+                                  controller: controllerTitle,
                                   style: TextStyle(
                                     fontSize: 26.0,
                                     fontWeight: FontWeight.bold,
@@ -141,8 +159,9 @@ class _NewTaskPageState extends State<NewTaskPage> {
                           onSubmitted: (desc){
                             print("Description de la tâche: $desc");
                           },
+                          controller: controllerDescription,
                           decoration: InputDecoration(
-                            hintText: "Entrer le description de la tâche",
+                              hintText: "Entrer le description de la tâche",
                               border: InputBorder.none,
                               contentPadding: EdgeInsets.symmetric(
                                 horizontal: 24.0,
@@ -155,7 +174,39 @@ class _NewTaskPageState extends State<NewTaskPage> {
                             padding: const EdgeInsets.symmetric(
                               horizontal: 24.0,
                             ),
+                          ),
+                          todolist != null ? ListView(
+                            shrinkWrap: true,
+                            children: todolist!
+                                .map((data) {
+                              return ToDoWidget(
+                                isDone: data['isdone'],
+                                text: data['etape'],
+                                onChange:() => setState(() {
+                                  data['isdone'] = !data['isdone'];
+                                }),
 
+                              );
+                            }).toList(),
+                          ) : Container(),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 25,
+                              top: 25,
+                            ),
+                            child: TextField(
+                              decoration: InputDecoration(
+                                hintText: "Entrer une étape...",
+                                border: InputBorder.none,
+                              ),
+                              controller: controllerEtape,
+                              onSubmitted: (String text) {
+                                setState(() {
+                                  todolist?.add({"etape": text, "isdone": false});
+                                });
+                              },
+
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
@@ -186,7 +237,20 @@ class _NewTaskPageState extends State<NewTaskPage> {
             icon: const Icon(Icons.add),
             label: const Text("Créer"),
             backgroundColor: Colors.grey,
-            onPressed: () {}),
+            onPressed: () {
+              final task = NewTaskPage(
+                title: controllerTitle.text,
+                desc: controllerDescription.text,
+                color: myColor,
+                image: bytesToBase64(imageUser),
+                date: _date,
+                time: _time,
+                todolist: todolist,
+              );
+              createTask(task);
+              //revenir en arrière
+              Navigator.pop(context);
+            }),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         bottomNavigationBar: BottomAppBar(
           color: Colors.white70,
@@ -218,7 +282,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                               ElevatedButton(
                                 child: const Text('Valider'),
                                 onPressed: () {
-                                  print(myColor);
+                                  //couleurFinal = int.parse(valueString, radix: 16);
                                   Navigator.of(context)
                                       .pop(); //dismiss the color picker
                                 },
@@ -305,7 +369,32 @@ class _NewTaskPageState extends State<NewTaskPage> {
           ),
           shape: AutomaticNotchedShape(
               RoundedRectangleBorder(), StadiumBorder(side: BorderSide())),
-        ));
+        ),
+        backgroundColor: myColor
+
+    );
+  }
+
+  Future createTask (NewTaskPage task) async {
+    final docTask = FirebaseFirestore.instance.collection('taches').doc();
+    task.id = docTask.id;
+
+    final json = task.toJson();
+    await docTask.set(json);
+  }
+
+  static String? bytesToBase64(Uint8List? bytes) {
+    if (bytes == null) {
+      return null;
+    }
+    return base64Encode(bytes);
+  }
+
+  static Uint8List? base64ToBytes(String base64) {
+    if (base64.isEmpty) {
+      return null;
+    }
+    return base64Decode(base64);
   }
 }
 
@@ -317,3 +406,4 @@ class _NewTaskPageState extends State<NewTaskPage> {
  *  CreateButton
  *  + changement visuelle/graphique de la page
  */
+

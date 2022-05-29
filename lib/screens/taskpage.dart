@@ -17,16 +17,16 @@ class Taskpage extends StatefulWidget {
       required this.id,
       this.title,
       this.desc,
-      this.color,
+      this.color = Colors.white,
       this.date,
       this.time,
       this.image,
       this.todolist})
       : super(key: key);
   final id;
-  final title;
-  final desc;
-  final color;
+  late final title;
+  late final desc;
+  final Color color;
   final date;
   final time;
   final image;
@@ -40,13 +40,8 @@ class _TaskpageState extends State<Taskpage> {
   final Stream<QuerySnapshot> _tasksStream =
       FirebaseFirestore.instance.collection('todo').snapshots();
 
-  final fktache = FirebaseFirestore.instance.collection("taches");
-
-  //Uint8List base64Decode(String img64) => base64.decode(img64);
-  //String decoded = stringToBase64.decode(img64);
-
   //attribut colorPicker
-  Color myColor = Colors.white;
+  late Color myColor;
 
   //attribut
   Uint8List? imageUser;
@@ -57,22 +52,23 @@ class _TaskpageState extends State<Taskpage> {
   String _date = "";
   String _time = "";
 
-  List<dynamic>? todolist;
+  //String? valueString;
 
-  String _taskTitle = '';
+  List<dynamic> todolist = [];
+
+  final controllerTitle = TextEditingController();
+  final controllerDescription = TextEditingController();
+  final controllerEtape = TextEditingController();
 
   void initState() {
     print("ID de la tâche: ${widget.id}");
     print("Titre de la tâhe: ${widget.title}");
-    print("Description de la tâhe: ${widget.desc}");
-    print("Couleur de la tâhe: ${widget.color}");
-    print("Date de la tâhe: ${widget.date}");
-    print("Heure de la tâhe: ${widget.time}");
-    print("Image de la tâhe: ${widget.image}");
+    print("Description de la tâche: ${widget.desc}");
+    print("Couleur de la tâche: ${widget.color}");
+    print("Date de la tâche: ${widget.date}");
+    print("Heure de la tâche: ${widget.time}");
+    print("Image de la tâche: ${widget.image}");
     print("imageUser:  $imageUser");
-    if (widget.id != null) {
-      _taskTitle = "nouveau";
-    }
 
     if (widget.image != null) {
       imageUser = base64Decode(widget.image);
@@ -80,7 +76,12 @@ class _TaskpageState extends State<Taskpage> {
       imageUser = null;
     }
 
-    todolist = widget.todolist;
+
+    todolist = widget.todolist ?? [];
+    controllerTitle.text = widget.title;
+    controllerDescription.text = widget.desc;
+    myColor = widget.color;
+
 
     super.initState();
   }
@@ -88,7 +89,8 @@ class _TaskpageState extends State<Taskpage> {
   //Méthodes pour l'image picker
   Future pickImage(ImageSource source) async {
     try {
-      final image = await ImagePicker().pickImage(source: source, maxHeight: 250, maxWidth: 250);
+      final image = await ImagePicker()
+          .pickImage(source: source, maxHeight: 250, maxWidth: 250);
 
       if (image == null) return;
 
@@ -103,16 +105,14 @@ class _TaskpageState extends State<Taskpage> {
   Widget build(BuildContext context) {
     return Scaffold(
         //backgroundColor: myColor,
-        backgroundColor: Color(int.parse('${widget.color}')),
+        backgroundColor: myColor,
         body: SafeArea(
           child: Container(
             child: Stack(children: [
               ListView(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(
-                      top:10
-                    ),
+                    padding: const EdgeInsets.only(top: 10),
                   ),
                   //La condition nulle est valable pour la newTaskPage mais pas pour l'update -> crash l'appli
                   // TODO faire une condition NULL avec l'image FIREBASE
@@ -145,20 +145,26 @@ class _TaskpageState extends State<Taskpage> {
                         ),
                         Expanded(
                             child: TextField(
-                          onSubmitted: (value) {
-                            print("Titre de la tâche: $value");
-                          },
+                              onSubmitted: (String text) {
+                                if(text.isEmpty){
+                                  return;
+                                }
+                                setState(() {
+                                  widget.title = text;
+                                });
+                                },
                           decoration: InputDecoration(
-                            //hintText: "Entrer le titre de la tâche",
-                            hintText: "${widget.title}",
+                            hintText: "Entrer le titre de la tâche",
                             border: InputBorder.none,
                           ),
+                              controller: controllerTitle,
                           style: TextStyle(
                             fontSize: 26.0,
                             fontWeight: FontWeight.bold,
                             color: Colors.blueGrey,
                           ),
-                        ))
+                        )
+                        )
                       ],
                     ),
                   ),
@@ -167,16 +173,23 @@ class _TaskpageState extends State<Taskpage> {
                       bottom: 8.0,
                     ),
                     child: TextField(
-                      onSubmitted: (desc) {
-                        print("Description de la tâche: $desc");
+                      onSubmitted: (String text) {
+                        if(text.isEmpty){
+                          return;
+                        }
+                        setState(() {
+                          widget.desc = text;
+                        });
                       },
                       decoration: InputDecoration(
-                          //hintText: "Entrer le description de la tâche",
-                          hintText: "${widget.desc}",
+                          hintText: "Entrer le description de la tâche",
+                          //hintText: "${widget.desc}",
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(
                             horizontal: 24.0,
-                          )),
+                          )
+                      ),
+                      controller: controllerDescription,
                     ),
                   ),
                   Column(
@@ -185,52 +198,45 @@ class _TaskpageState extends State<Taskpage> {
                         padding: const EdgeInsets.symmetric(
                           horizontal: 24.0,
                         ),
-                        /*
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 20.0,
-                              height: 20.0,
-                              margin: const EdgeInsets.only(
-                                right: 12.0,
-                              ),
-                              child: const Icon(
-                                Icons.check_box_outline_blank,
-                                color: Colors.blueGrey,
-                                size: 24.0,
-                              ),
-                            ),
-                            Expanded(
-                                child: TextField(
-                                  onSubmitted: (value){
-                                    print("Element à faire: $value");
-                                  },
-                                  decoration: const InputDecoration(
-                                    hintText: "Entrer un élément à faire...",
-                                    border: InputBorder.none,
-                                  ),
-                                ))
-                          ],
-                        ),
-                        */
                       ),
+                      todolist != null
+                          ? ListView(
+                              shrinkWrap: true,
+                              children: todolist!.map((data) {
+                                return ToDoWidget(
+                                  isDone: data['isdone'],
+                                  text: data['etape'],
+                                  onChange: () => setState(() {
+                                    data['isdone'] = !data['isdone'];
+                                  }),
+                                );
+                              }).toList(),
+                            )
+                          : Container(),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 25,
+                          top: 25,
+                        ),
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText: "Entrer une étape...",
+                            border: InputBorder.none,
+                          ),
+                          controller: controllerEtape,
+                          onSubmitted: (String text) {
+                            print("etape $text");
+                            if(text.isEmpty){
+                              return ;
+                            }
+                            setState(() {
+                              todolist.add({"etape": text, "isdone": false});
+                            });
 
-                          todolist != null ? ListView(
-                            shrinkWrap: true,
-                            children: todolist!
-                                .map((data) {
-                              return ToDoWidget(
-                                isDone: data['isdone'],
-                                text: data['etape'],
-                                onChange:() => setState(() {
-                                  data['isdone'] = !data['isdone'];
-                                }),
+                          },
 
-                              );
-                            }).toList(),
-                          ) : Container(),
-
-
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(
                           left: 25,
@@ -261,7 +267,22 @@ class _TaskpageState extends State<Taskpage> {
             icon: const Icon(Icons.update),
             label: const Text("Mettre à jour"),
             backgroundColor: Colors.grey,
-            onPressed: () {}),
+            onPressed: () {
+              final docTask = FirebaseFirestore.instance
+                  .collection('taches')
+                  .doc(widget.id);
+              docTask.update({
+                'title': controllerTitle.text,
+                'desc': controllerDescription.text,
+                'color': myColor.value  ,
+                'image': bytesToBase64(imageUser),
+                'date': _date,
+                'time': _time,
+                'todolist' : todolist,
+              });
+              //revenir en arrière
+                Navigator.pop(context);
+            }),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         bottomNavigationBar: BottomAppBar(
           color: Colors.white70,
@@ -292,7 +313,7 @@ class _TaskpageState extends State<Taskpage> {
                           ElevatedButton(
                             child: const Text('Valider'),
                             onPressed: () {
-                              print(myColor);
+                              //couleurFinal = int.parse(valueString, radix: 16);
                               Navigator.of(context)
                                   .pop(); //dismiss the color picker
                             },
@@ -380,6 +401,11 @@ class _TaskpageState extends State<Taskpage> {
               iconSize: 36.0,
               icon: Icon(Icons.delete_forever_rounded, color: Colors.redAccent),
               onPressed: () {
+                final toDo = FirebaseFirestore.instance
+                    .collection('taches')
+                    .doc(widget.id);
+                toDo.delete();
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => Homepage()),
