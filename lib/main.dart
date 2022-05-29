@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:projetflutter_nam/screens/homepage.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -21,7 +22,13 @@ Future main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context){
-    return const MaterialApp(
+    return MaterialApp(
+      theme: ThemeData(
+        textTheme: GoogleFonts.oxygenTextTheme(
+          Theme.of(context).textTheme,
+        )
+      ),
+      debugShowCheckedModeBanner: false,
       home: Homepage(),
     );
   }

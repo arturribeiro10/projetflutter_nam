@@ -40,6 +40,9 @@ class _NewTaskPageState extends State<NewTaskPage> {
   String _date = "";
   String _time = "";
 
+  static const primaryColor = Color(0xFFFFC107);
+  static const backgroundColor = Color(0xFFFFF8E1);
+
 
   String _taskTitle = '';
 
@@ -109,7 +112,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                                 padding: EdgeInsets.all(24.0),
                                 child: Icon(
                                   Icons.arrow_back_rounded,
-                                  color: Colors.blueGrey,
+                                  color: Colors.black54,
                                   size: 36.0,
                                 ),
                               ),
@@ -126,7 +129,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                                   style: TextStyle(
                                     fontSize: 26.0,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.blueGrey,
+                                    color: Colors.black54,
                                   ),
                                 )
                             )
@@ -185,11 +188,15 @@ class _NewTaskPageState extends State<NewTaskPage> {
             elevation: 4.0,
             icon: const Icon(Icons.add),
             label: const Text("Créer"),
-            backgroundColor: Colors.grey,
+            backgroundColor: primaryColor,
+            splashColor: myColor,
+            foregroundColor: myColor,
+            focusColor: backgroundColor,
+            hoverColor: backgroundColor,
             onPressed: () {}),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         bottomNavigationBar: BottomAppBar(
-          color: Colors.white70,
+          color: primaryColor.withOpacity(1),
           child: Row(mainAxisSize: MainAxisSize.max,
               children: <Widget>[
                 IconButton(
@@ -202,6 +209,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
+                            backgroundColor: backgroundColor,
                             title: Text('Choisis une couleur'),
                             content: SingleChildScrollView(
                               child: ColorPicker(
@@ -222,6 +230,9 @@ class _NewTaskPageState extends State<NewTaskPage> {
                                   Navigator.of(context)
                                       .pop(); //dismiss the color picker
                                 },
+                                style: ElevatedButton.styleFrom(
+                                  primary: primaryColor,
+                                ),
                               ),
                             ],
                           );
@@ -236,10 +247,12 @@ class _NewTaskPageState extends State<NewTaskPage> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
+                            backgroundColor: backgroundColor,
                             title: Text('Sélectionner une date'),
                             actions: <Widget>[
                               ElevatedButton(
-                                child: Icon(Icons.calendar_month),
+                                child: Icon(Icons.calendar_month,
+                                ),
                                 onPressed: () async {
                                   DateTime? newDate = await showDatePicker(
                                     context: context,
@@ -251,6 +264,9 @@ class _NewTaskPageState extends State<NewTaskPage> {
                                   setState(() => date = newDate);
                                   _date = "${newDate.day.toString().padLeft(2,'0')}-${newDate.month.toString().padLeft(2,'0')}-${newDate.year.toString()}";
                                 },
+                                style: ElevatedButton.styleFrom(
+                                  primary: primaryColor,
+                                ),
                               ),
                               ElevatedButton(
                                 child: Icon(Icons.more_time),
@@ -264,6 +280,9 @@ class _NewTaskPageState extends State<NewTaskPage> {
                                   setState(() => time = newTime);
                                   _time = "${newTime.hour}:${newTime.minute}";
                                 },
+                                style: ElevatedButton.styleFrom(
+                                  primary: primaryColor,
+                                ),
                               ),
                               SizedBox(
                                 width: 20,
@@ -281,18 +300,25 @@ class _NewTaskPageState extends State<NewTaskPage> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
+                            backgroundColor: backgroundColor,
                             title: Text('Importer une image'),
                             actions: <Widget>[
-                              MaterialButton(
+                              ElevatedButton(
                                   child: Icon(Icons.image),
                                   onPressed: () {
                                     pickImage(ImageSource.gallery);
-                                  }),
-                              MaterialButton(
+                                  },
+                          style: ElevatedButton.styleFrom(
+                          primary: primaryColor,
+                          ),),
+                              ElevatedButton(
                                   child: Icon(Icons.camera_alt),
                                   onPressed: () {
                                     pickImage(ImageSource.camera);
-                                  }),
+                                  },
+                                style: ElevatedButton.styleFrom(
+                                  primary: primaryColor,
+                                ),),
                               SizedBox(
                                 width: 20,
                               ),
@@ -310,10 +336,11 @@ class _NewTaskPageState extends State<NewTaskPage> {
 }
 
 /*
- * Author : Nicolas
+ * Author(s) : Nicolas, Manuel
  *  BottomAppBar
  *  Colopicker feature
  *  ImagePicker feature + Méthode PickImage();
  *  CreateButton
  *  + changement visuelle/graphique de la page
+ * Design, colors, icons, style
  */

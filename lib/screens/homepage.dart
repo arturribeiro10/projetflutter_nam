@@ -18,14 +18,15 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  static const primaryColor = Color(0xFFFFC107);
+  static const backgroundColor = Color(0xFFFFF8E1);
   final Stream<QuerySnapshot> _tasksStream =
       FirebaseFirestore.instance.collection('taches').snapshots();
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: primaryColor,
         leading: IconButton(
           icon: Icon(Icons.search),
           onPressed: () {
@@ -43,7 +44,7 @@ class _HomepageState extends State<Homepage> {
             horizontal: 24.0,
             //vertical: 32.0,
           ),
-          color: Color(0xFFB0BEC5),
+          color: backgroundColor,
           child: Stack(children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,7 +119,7 @@ class _HomepageState extends State<Homepage> {
                       child: Icon(
                     Icons.add_box_rounded,
                     size: 72.0,
-                    color: Colors.blue,
+                    color: primaryColor,
                   )),
                 )),
           ]),

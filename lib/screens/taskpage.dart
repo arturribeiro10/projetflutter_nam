@@ -296,6 +296,9 @@ class _TaskpageState extends State<Taskpage> {
                               Navigator.of(context)
                                   .pop(); //dismiss the color picker
                             },
+                            style: ElevatedButton.styleFrom(
+                              primary: myColor,
+                            ),
                           ),
                         ],
                       );
@@ -326,6 +329,9 @@ class _TaskpageState extends State<Taskpage> {
                               _date =
                                   "${newDate.day.toString().padLeft(2, '0')}-${newDate.month.toString().padLeft(2, '0')}-${newDate.year.toString()}";
                             },
+                            style: ElevatedButton.styleFrom(
+                              primary: myColor,
+                            ),
                           ),
                           ElevatedButton(
                             child: Icon(Icons.more_time),
@@ -339,6 +345,9 @@ class _TaskpageState extends State<Taskpage> {
                               setState(() => time = newTime);
                               _time = "${newTime.hour}:${newTime.minute}";
                             },
+                            style: ElevatedButton.styleFrom(
+                              primary: myColor,
+                            ),
                           ),
                           SizedBox(
                             width: 20,
@@ -358,16 +367,23 @@ class _TaskpageState extends State<Taskpage> {
                       return AlertDialog(
                         title: Text('Importer une image'),
                         actions: <Widget>[
-                          MaterialButton(
+                          ElevatedButton(
                               child: Icon(Icons.image),
                               onPressed: () {
                                 pickImage(ImageSource.gallery);
-                              }),
-                          MaterialButton(
+                              },
+                      style: ElevatedButton.styleFrom(
+                      primary: myColor,
+                      ),
+                              ),
+                          ElevatedButton(
                               child: Icon(Icons.camera_alt),
                               onPressed: () {
                                 pickImage(ImageSource.camera);
-                              }),
+                              },
+                            style: ElevatedButton.styleFrom(
+                              primary: myColor,
+                            ),),
                           SizedBox(
                             width: 20,
                           ),
