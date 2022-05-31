@@ -99,11 +99,11 @@ class _NewTaskPageState extends State<NewTaskPage> {
             child: Stack(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(
-                        top:10
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10.0,
+                      horizontal: 12.0,
                     ),
-                  ),
-                  ListView(
+                  child : ListView(
                     children: [
                       imageUser != null
                           ? Image.memory(
@@ -112,21 +112,20 @@ class _NewTaskPageState extends State<NewTaskPage> {
                         height: 275,
                       )
                           : Text(''),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 17.0,
-                          bottom: 6.0,),
-                        child: Row(
+                        Row(
                           children: [
                             GestureDetector(
                               onTap: () {
                                 Navigator.pop(context);
                               },
                               child: const Padding(
-                                padding: EdgeInsets.all(24.0),
+                                padding: EdgeInsets.only(
+                                    left: 22.0,
+                                  right: 10.0,
+                                ),
                                 child: Icon(
                                   Icons.arrow_back_rounded,
-                                  color: Colors.blueGrey,
+                                  color: Colors.black,
                                   size: 36.0,
                                 ),
                               ),
@@ -137,23 +136,38 @@ class _NewTaskPageState extends State<NewTaskPage> {
                                     print("Titre de la tâche: $value");
                                   },
                                   decoration: InputDecoration(
-                                    hintText: "Entrer le titre de la tâche",
-                                    border: InputBorder.none,
-                                  ),
+                                    labelText: "Titre de la tâche",
+                                    hintText: "Entrer le titre de la tâche...",
+                                    hintStyle: TextStyle(
+                                      fontSize: 18.0
+                                    ),
+                                    labelStyle: TextStyle(
+                                      color: Colors.black
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(color: Colors.transparent, width: 2.0),
+                                      borderRadius: BorderRadius.circular(25.0),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(width: 2, color: Colors.black54),
+                                  borderRadius: BorderRadius.circular(15),
+                                )),
                                   controller: controllerTitle,
                                   style: TextStyle(
-                                    fontSize: 26.0,
+                                    fontSize: 22.0,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.blueGrey,
+                                    color: Colors.black,
                                   ),
                                 )
                             )
                           ],
                         ),
-                      ),
                       Padding(
                         padding: EdgeInsets.only(
+                          top: 8.0,
                           bottom: 8.0,
+                          right: 10.0,
+                          left: 12.0,
                         ),
                         child: TextField(
                           onSubmitted: (desc){
@@ -161,19 +175,27 @@ class _NewTaskPageState extends State<NewTaskPage> {
                           },
                           controller: controllerDescription,
                           decoration: InputDecoration(
-                              hintText: "Entrer le description de la tâche",
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(
-                                horizontal: 24.0,
-                              )),
+                            labelText: "Description",
+                              hintText: "Entrer la description de la tâche...",
+                            labelStyle: TextStyle(
+                                color: Colors.black54,
+                              fontSize: 18.0
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.transparent, width: 2.0),
+                              borderRadius: BorderRadius.circular(25.0),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(width: 2, color: Colors.black54),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                              ),
                         ),
                       ),
                       Column(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 24.0,
-                            ),
+                            padding: const EdgeInsets.all(0.0),
                           ),
                           todolist != null ? ListView(
                             shrinkWrap: true,
@@ -191,26 +213,32 @@ class _NewTaskPageState extends State<NewTaskPage> {
                           ) : Container(),
                           Padding(
                             padding: const EdgeInsets.only(
-                              left: 25,
-                              top: 25,
+                              left: 22,
+                              top: 10,
                             ),
                             child: TextField(
                               decoration: InputDecoration(
                                 hintText: "Entrer une étape...",
-                                border: InputBorder.none,
-                              ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.grey),
+                                ),
+                                suffixIcon: IconButton(     // Icon to
+                                  icon: Icon(Icons.clear), // clear text
+                                  onPressed: clearText,
+                                )),
                               controller: controllerEtape,
                               onSubmitted: (String text) {
                                 setState(() {
                                   todolist?.add({"etape": text, "isdone": false});
                                 });
+                                clearText();
                               },
 
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
-                              left: 25,
+                              left: 22,
                               top: 25,
                             ),
                             child: Row(
@@ -229,7 +257,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                       )
                     ],
                   ),
-                ]),
+                  )]),
           ),
         ),
         floatingActionButton: FloatingActionButton.extended(
@@ -396,7 +424,11 @@ class _NewTaskPageState extends State<NewTaskPage> {
     }
     return base64Decode(base64);
   }
+  void clearText() {
+    controllerEtape.clear();
+  }
 }
+
 
 /*
  * Author : Nicolas

@@ -130,11 +130,11 @@ class _HomepageState extends State<Homepage> {
 
 class CustomSearchDelegate extends SearchDelegate {
   List<String> searchTerms = [
-    'Mangue',
-    'Kiwi',
-    'Fraise',
-    'Pomme',
-    'Ananas'
+    'Travail',
+    'Personnel',
+    'Urgent',
+    'Important',
+    'Vacances'
   ];
 
   @override
