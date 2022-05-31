@@ -140,6 +140,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                         ),
                         Expanded(
                             child: TextField(
+                              autofocus: true,
                           onSubmitted: (value) {
                             print("Titre de la tâche: $value");
                           },
@@ -179,7 +180,6 @@ class _NewTaskPageState extends State<NewTaskPage> {
                       child: TextField(
                         maxLines: 3,
                         minLines: 1,
-                        autofocus: true,
                         maxLength: 100,
                         onSubmitted: (desc) {
                           print("Description de la tâche: $desc");

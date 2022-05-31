@@ -188,7 +188,6 @@ class _TaskpageState extends State<Taskpage> {
                       ),
                       child: TextField(
                         maxLines: 3,
-                        autofocus: true,
                         minLines: 1,
                         maxLength: 100,
                         onSubmitted: (String text) {
@@ -242,6 +241,7 @@ class _TaskpageState extends State<Taskpage> {
                             left: 25,
                           ),
                           child: TextField(
+                            autofocus: true,
                             decoration: InputDecoration(
                                 hintText: "Entrer une étape...",
                                 focusedBorder: UnderlineInputBorder(
