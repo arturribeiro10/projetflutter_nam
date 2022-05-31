@@ -12,7 +12,17 @@ import 'dart:io';
 import 'homepage.dart';
 
 class NewTaskPage extends StatefulWidget {
-  NewTaskPage({Key? key, this.id, this.title, this.desc, this.color = Colors.white, this.date, this.time, this.image, this.todolist}) : super(key: key);
+  NewTaskPage(
+      {Key? key,
+      this.id,
+      this.title,
+      this.desc,
+      this.color = Colors.white,
+      this.date,
+      this.time,
+      this.image,
+      this.todolist})
+      : super(key: key);
   var id;
   final title;
   final desc;
@@ -22,32 +32,32 @@ class NewTaskPage extends StatefulWidget {
   final image;
   final List<dynamic>? todolist;
 
-
-  Map<String, dynamic> toJson() =>{
-    'id': id,
-    'title': title,
-    'desc': desc,
-    'color': color.value,
-    'image': image,
-    'date': date,
-    'time': time,
-    'todolist': todolist,
-  };
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'desc': desc,
+        'color': color.value,
+        'image': image,
+        'date': date,
+        'time': time,
+        'todolist': todolist,
+      };
 
   @override
   State<NewTaskPage> createState() => _NewTaskPageState();
 }
 
 class _NewTaskPageState extends State<NewTaskPage> {
-
   final controllerTitle = TextEditingController();
   final controllerDescription = TextEditingController();
 
   //attribut colorPicker
   Color myColor = Colors.white;
+
   //attribut ImagePicker
   //attribut
   Uint8List? imageUser;
+
   //attributs Date & Time Picker
   DateTime? date;
   TimeOfDay? time;
@@ -60,10 +70,9 @@ class _NewTaskPageState extends State<NewTaskPage> {
 
   final controllerEtape = TextEditingController();
 
-
-  void initState(){
+  void initState() {
     print("ID de la tâche: ${widget.id}");
-    print("Titre de la tâhe: ${widget.title}");
+    print("Titre de la tâche: ${widget.title}");
     print("Description de la tâhe: ${widget.desc}");
     print("Couleur de la tâhe: ${widget.color}");
     print("Date de la tâhe: ${widget.date}");
@@ -71,23 +80,23 @@ class _NewTaskPageState extends State<NewTaskPage> {
 
     todolist = widget.todolist ?? [];
 
-    myColor= widget.color;
+    myColor = widget.color;
 
     super.initState();
   }
 
-
   //Méthodes pour l'image picker
   Future pickImage(ImageSource source) async {
     try {
-      final image = await ImagePicker().pickImage(source: source, maxHeight: 250, maxWidth: 250);
+      final image = await ImagePicker()
+          .pickImage(source: source, maxHeight: 250, maxWidth: 250);
 
       if (image == null) return;
 
       Uint8List imageBytes = await image.readAsBytes();
       setState(() => {imageUser = imageBytes});
     } on PlatformException catch (e) {
-      print('Impossible de recuprer l"image: $e');
+      print('Impossible de recupérer l"image: $e');
     }
   }
 
@@ -96,174 +105,168 @@ class _NewTaskPageState extends State<NewTaskPage> {
     return Scaffold(
         body: SafeArea(
           child: Container(
-            child: Stack(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10.0,
-                      horizontal: 12.0,
-                    ),
-                  child : ListView(
-                    children: [
-                      imageUser != null
-                          ? Image.memory(
-                        imageUser!,
-                        width: 275,
-                        height: 275,
-                      )
-                          : Text(''),
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Padding(
-                                padding: EdgeInsets.only(
-                                    left: 22.0,
-                                  right: 10.0,
-                                ),
-                                child: Icon(
-                                  Icons.arrow_back_rounded,
-                                  color: Colors.black,
-                                  size: 36.0,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                                child: TextField(
-                                  onSubmitted: (value){
-                                    print("Titre de la tâche: $value");
-                                  },
-                                  decoration: InputDecoration(
-                                    labelText: "Titre de la tâche",
-                                    hintText: "Entrer le titre de la tâche...",
-                                    hintStyle: TextStyle(
-                                      fontSize: 18.0
-                                    ),
-                                    labelStyle: TextStyle(
-                                      color: Colors.black
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(color: Colors.transparent, width: 2.0),
-                                      borderRadius: BorderRadius.circular(25.0),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(width: 2, color: Colors.black54),
-                                  borderRadius: BorderRadius.circular(15),
-                                )),
-                                  controller: controllerTitle,
-                                  style: TextStyle(
-                                    fontSize: 22.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                )
-                            )
-                          ],
-                        ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          top: 8.0,
-                          bottom: 8.0,
-                          right: 10.0,
-                          left: 12.0,
-                        ),
-                        child: TextField(
-                          onSubmitted: (desc){
-                            print("Description de la tâche: $desc");
+            child: Stack(children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 10.0,
+                  horizontal: 12.0,
+                ),
+                child: ListView(
+                  children: [
+                    imageUser != null
+                        ? Image.memory(
+                            imageUser!,
+                            width: 275,
+                            height: 275,
+                          )
+                        : Text(''),
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
                           },
-                          controller: controllerDescription,
+                          child: const Padding(
+                            padding: EdgeInsets.only(
+                              left: 22.0,
+                              right: 10.0,
+                            ),
+                            child: Icon(
+                              Icons.arrow_back_rounded,
+                              color: Colors.black,
+                              size: 36.0,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                            child: TextField(
+                          onSubmitted: (value) {
+                            print("Titre de la tâche: $value");
+                          },
                           decoration: InputDecoration(
-                            labelText: "Description",
-                              hintText: "Entrer la description de la tâche...",
-                            labelStyle: TextStyle(
-                                color: Colors.black54,
-                              fontSize: 18.0
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(color: Colors.transparent, width: 2.0),
-                              borderRadius: BorderRadius.circular(25.0),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(width: 2, color: Colors.black54),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
+                              labelText: "Titre de la tâche",
+                              hintText: "Entrer le titre de la tâche...",
+                              hintStyle: TextStyle(fontSize: 18.0),
+                              labelStyle: TextStyle(
+                                  color: Colors.black54,
+                                  fontWeight: FontWeight.normal),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    color: Colors.transparent, width: 2.0),
+                                borderRadius: BorderRadius.circular(25.0),
                               ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    width: 2, color: Colors.black54),
+                                borderRadius: BorderRadius.circular(15),
+                              )),
+                          controller: controllerTitle,
+                          style: TextStyle(
+                            fontSize: 22.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ))
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: 8.0,
+                        bottom: 8.0,
+                        right: 10.0,
+                        left: 12.0,
+                      ),
+                      child: TextField(
+                        maxLines: 3,
+                        minLines: 1,
+                        autofocus: true,
+                        maxLength: 100,
+                        onSubmitted: (desc) {
+                          print("Description de la tâche: $desc");
+                        },
+                        controller: controllerDescription,
+                        decoration: InputDecoration(
+                          labelText: "Description",
+                          hintText: "Entrer la description de la tâche...",
+                          labelStyle:
+                              TextStyle(color: Colors.black54, fontSize: 18.0),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Colors.transparent, width: 2.0),
+                            borderRadius: BorderRadius.circular(25.0),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                width: 2, color: Colors.black54),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
                         ),
                       ),
-                      Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(0.0),
+                    ),
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(0.0),
+                        ),
+                        todolist != null
+                            ? ListView(
+                                shrinkWrap: true,
+                                children: todolist!.map((data) {
+                                  return ToDoWidget(
+                                    isDone: data['isdone'],
+                                    text: data['etape'],
+                                    onChange: () => setState(() {
+                                      data['isdone'] = !data['isdone'];
+                                    }),
+                                  );
+                                }).toList(),
+                              )
+                            : Container(),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: 25,
                           ),
-                          todolist != null ? ListView(
-                            shrinkWrap: true,
-                            children: todolist!
-                                .map((data) {
-                              return ToDoWidget(
-                                isDone: data['isdone'],
-                                text: data['etape'],
-                                onChange:() => setState(() {
-                                  data['isdone'] = !data['isdone'];
-                                }),
-
-                              );
-                            }).toList(),
-                          ) : Container(),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: 22,
-                              top: 10,
-                            ),
-                            child: TextField(
-                              decoration: InputDecoration(
+                          child: TextField(
+                            decoration: InputDecoration(
                                 hintText: "Entrer une étape...",
                                 focusedBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(color: Colors.grey),
                                 ),
-                                suffixIcon: IconButton(     // Icon to
+                                suffixIcon: IconButton(
+                                  // Icon to
                                   icon: Icon(Icons.clear), // clear text
                                   onPressed: clearText,
                                 )),
-                              controller: controllerEtape,
-                              onSubmitted: (String text) {
-                                setState(() {
-                                  todolist?.add({"etape": text, "isdone": false});
-                                });
-                                clearText();
-                              },
-
-                            ),
+                            controller: controllerEtape,
+                            onSubmitted: (String text) {
+                              setState(() {
+                                todolist?.add({"etape": text, "isdone": false});
+                              });
+                              clearText();
+                            },
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: 22,
-                              top: 25,
-                            ),
-                            child: Row(
-                              children: [
-                                Text((() {
-                                  /*
-                              if (date == null) {
-                                return "Pas de date de fin";
-                              }*/
-                                  return "Date de fin : ${_date}  ${_time}";
-                                })())
-                              ],
-                            ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: 25,
+                            top: 25,
                           ),
-                        ],
-                      )
-                    ],
-                  ),
-                  )]),
+                          child: Chip(
+                            label: Text("Date d'échéance : ${_date}  ${_time}"),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              )
+            ]),
           ),
         ),
         floatingActionButton: FloatingActionButton.extended(
             elevation: 4.0,
             icon: const Icon(Icons.add),
-            label: const Text("Créer"),
+            label: const Text("Ajouter"),
             backgroundColor: Colors.grey,
             onPressed: () {
               final task = NewTaskPage(
@@ -282,128 +285,125 @@ class _NewTaskPageState extends State<NewTaskPage> {
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         bottomNavigationBar: BottomAppBar(
           color: Colors.white70,
-          child: Row(mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                IconButton(
-                  iconSize: 36.0,
-                  icon: Icon(
-                    Icons.color_lens_outlined,
-                  ),
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text('Choisis une couleur'),
-                            content: SingleChildScrollView(
-                              child: ColorPicker(
-                                pickerColor: myColor, //default color
-                                onColorChanged: (Color color) {
-                                  //on color picked
-                                  setState(() {
-                                    myColor = color;
-                                  });
-                                },
-                              ),
-                            ),
-                            actions: <Widget>[
-                              ElevatedButton(
-                                child: const Text('Valider'),
-                                onPressed: () {
-                                  //couleurFinal = int.parse(valueString, radix: 16);
-                                  Navigator.of(context)
-                                      .pop(); //dismiss the color picker
-                                },
-                              ),
-                            ],
-                          );
-                        });
-                  },
-                ),
-                IconButton(
-                  iconSize: 36.0,
-                  icon: Icon(Icons.calendar_month),
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text('Sélectionner une date'),
-                            actions: <Widget>[
-                              ElevatedButton(
-                                child: Icon(Icons.calendar_month),
-                                onPressed: () async {
-                                  DateTime? newDate = await showDatePicker(
-                                    context: context,
-                                    initialDate: DateTime.now(),
-                                    firstDate: DateTime(2022),
-                                    lastDate: DateTime(2100),
-                                  );
-                                  if (newDate == null) return;
-                                  setState(() => date = newDate);
-                                  _date = "${newDate.day.toString().padLeft(2,'0')}-${newDate.month.toString().padLeft(2,'0')}-${newDate.year.toString()}";
-                                },
-                              ),
-                              ElevatedButton(
-                                child: Icon(Icons.more_time),
-                                onPressed: () async {
-                                  TimeOfDay? newTime = await showTimePicker(
-                                    context: context,
-                                    initialTime: TimeOfDay.now(),
-                                  );
-                                  if(newTime == null) return;
+          child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
+            IconButton(
+              iconSize: 36.0,
+              icon: Icon(
+                Icons.color_lens_outlined,
+              ),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Choisir une couleur'),
+                        content: SingleChildScrollView(
+                          child: ColorPicker(
+                            pickerColor: myColor, //default color
+                            onColorChanged: (Color color) {
+                              //on color picked
+                              setState(() {
+                                myColor = color;
+                              });
+                            },
+                          ),
+                        ),
+                        actions: <Widget>[
+                          ElevatedButton(
+                            child: const Text('OK'),
+                            onPressed: () {
+                              //couleurFinal = int.parse(valueString, radix: 16);
+                              Navigator.of(context)
+                                  .pop(); //dismiss the color picker
+                            },
+                          ),
+                        ],
+                      );
+                    });
+              },
+            ),
+            IconButton(
+              iconSize: 36.0,
+              icon: Icon(Icons.calendar_month),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Sélectionner une date'),
+                        actions: <Widget>[
+                          ElevatedButton(
+                            child: Icon(Icons.calendar_month),
+                            onPressed: () async {
+                              DateTime? newDate = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime(2022),
+                                lastDate: DateTime(2100),
+                              );
+                              if (newDate == null) return;
+                              setState(() => date = newDate);
+                              _date =
+                                  "${newDate.day.toString().padLeft(2, '0')}-${newDate.month.toString().padLeft(2, '0')}-${newDate.year.toString()}";
+                            },
+                          ),
+                          ElevatedButton(
+                            child: Icon(Icons.more_time),
+                            onPressed: () async {
+                              TimeOfDay? newTime = await showTimePicker(
+                                context: context,
+                                initialTime: TimeOfDay.now(),
+                              );
+                              if (newTime == null) return;
 
-                                  setState(() => time = newTime);
-                                  _time = "${newTime.hour}:${newTime.minute}";
-                                },
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                            ],
-                          );
-                        });
-                  },
-                ),
-                IconButton(
-                  iconSize: 36.0,
-                  icon: Icon(Icons.image),
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text('Importer une image'),
-                            actions: <Widget>[
-                              MaterialButton(
-                                  child: Icon(Icons.image),
-                                  onPressed: () {
-                                    pickImage(ImageSource.gallery);
-                                  }),
-                              MaterialButton(
-                                  child: Icon(Icons.camera_alt),
-                                  onPressed: () {
-                                    pickImage(ImageSource.camera);
-                                  }),
-                              SizedBox(
-                                width: 20,
-                              ),
-                            ],
-                          );
-                        });
-                  },
-                ),
-              ]
-          ),
+                              setState(() => time = newTime);
+                              _time = "${newTime.hour}:${newTime.minute}";
+                            },
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                        ],
+                      );
+                    });
+              },
+            ),
+            IconButton(
+              iconSize: 36.0,
+              icon: Icon(Icons.image),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Importer une image'),
+                        actions: <Widget>[
+                          MaterialButton(
+                              child: Icon(Icons.image),
+                              onPressed: () {
+                                pickImage(ImageSource.gallery);
+                              }),
+                          MaterialButton(
+                              child: Icon(Icons.camera_alt),
+                              onPressed: () {
+                                pickImage(ImageSource.camera);
+                              }),
+                          SizedBox(
+                            width: 20,
+                          ),
+                        ],
+                      );
+                    });
+              },
+            ),
+          ]),
           shape: AutomaticNotchedShape(
               RoundedRectangleBorder(), StadiumBorder(side: BorderSide())),
         ),
-        backgroundColor: myColor
-
-    );
+        backgroundColor: myColor);
   }
 
-  Future createTask (NewTaskPage task) async {
+  Future createTask(NewTaskPage task) async {
     final docTask = FirebaseFirestore.instance.collection('taches').doc();
     task.id = docTask.id;
 
@@ -424,11 +424,11 @@ class _NewTaskPageState extends State<NewTaskPage> {
     }
     return base64Decode(base64);
   }
+
   void clearText() {
     controllerEtape.clear();
   }
 }
-
 
 /*
  * Author : Nicolas
@@ -438,4 +438,3 @@ class _NewTaskPageState extends State<NewTaskPage> {
  *  CreateButton
  *  + changement visuelle/graphique de la page
  */
-

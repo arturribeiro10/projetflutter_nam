@@ -62,7 +62,7 @@ class _TaskpageState extends State<Taskpage> {
 
   void initState() {
     print("ID de la tâche: ${widget.id}");
-    print("Titre de la tâhe: ${widget.title}");
+    print("Titre de la tâche: ${widget.title}");
     print("Description de la tâche: ${widget.desc}");
     print("Couleur de la tâche: ${widget.color}");
     print("Date de la tâche: ${widget.date}");
@@ -76,12 +76,10 @@ class _TaskpageState extends State<Taskpage> {
       imageUser = null;
     }
 
-
     todolist = widget.todolist ?? [];
     controllerTitle.text = widget.title;
     controllerDescription.text = widget.desc;
     myColor = widget.color;
-
 
     super.initState();
   }
@@ -97,167 +95,189 @@ class _TaskpageState extends State<Taskpage> {
       Uint8List imageBytes = await image.readAsBytes();
       setState(() => {imageUser = imageBytes});
     } on PlatformException catch (e) {
-      print('Impossible de recuprer l"image: $e');
+      print('Impossible de recupérer l"image: $e');
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        //backgroundColor: myColor,
         backgroundColor: myColor,
         body: SafeArea(
           child: Container(
             child: Stack(children: [
-              ListView(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                  ),
-                  //La condition nulle est valable pour la newTaskPage mais pas pour l'update -> crash l'appli
-                  // TODO faire une condition NULL avec l'image FIREBASE
-                  imageUser != null
-                      ? Image.memory(
-                          imageUser!,
-                          width: 275,
-                          height: 275,
-                        )
-                      : Text(''),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 17.0,
-                      bottom: 6.0,
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 10.0,
+                  horizontal: 10.0,
+                ),
+                child: ListView(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
                     ),
-                    child: Row(
+                    //La condition nulle est valable pour la newTaskPage mais pas pour l'update -> crash l'appli
+                    // TODO faire une condition NULL avec l'image FIREBASE
+                    imageUser != null
+                        ? Image.memory(
+                            imageUser!,
+                            width: 275,
+                            height: 275,
+                          )
+                        : Text(''),
+                    Row(
                       children: [
                         GestureDetector(
                           onTap: () {
                             Navigator.pop(context);
                           },
                           child: const Padding(
-                            padding: EdgeInsets.all(24.0),
+                            padding: EdgeInsets.only(
+                              left: 22.0,
+                              right: 10.0,
+                            ),
                             child: Icon(
                               Icons.arrow_back_rounded,
-                              color: Colors.blueGrey,
+                              color: Colors.black,
                               size: 36.0,
                             ),
                           ),
                         ),
                         Expanded(
                             child: TextField(
-                              onSubmitted: (String text) {
-                                if(text.isEmpty){
-                                  return;
-                                }
-                                setState(() {
-                                  widget.title = text;
-                                });
-                                },
-                          decoration: InputDecoration(
-                            hintText: "Entrer le titre de la tâche",
-                            border: InputBorder.none,
-                          ),
-                              controller: controllerTitle,
-                          style: TextStyle(
-                            fontSize: 26.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blueGrey,
-                          ),
-                        )
-                        )
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      bottom: 8.0,
-                    ),
-                    child: TextField(
-                      onSubmitted: (String text) {
-                        if(text.isEmpty){
-                          return;
-                        }
-                        setState(() {
-                          widget.desc = text;
-                        });
-                      },
-                      decoration: InputDecoration(
-                          hintText: "Entrer le description de la tâche",
-                          //hintText: "${widget.desc}",
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(
-                            horizontal: 24.0,
-                          )
-                      ),
-                      controller: controllerDescription,
-                    ),
-                  ),
-                  Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24.0,
-                        ),
-                      ),
-                      todolist != null
-                          ? ListView(
-                              shrinkWrap: true,
-                              children: todolist!.map((data) {
-                                return ToDoWidget(
-                                  isDone: data['isdone'],
-                                  text: data['etape'],
-                                  onChange: () => setState(() {
-                                    data['isdone'] = !data['isdone'];
-                                  }),
-                                );
-                              }).toList(),
-                            )
-                          : Container(),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          left: 25,
-                          top: 25,
-                        ),
-                        child: TextField(
-                          decoration: InputDecoration(
-                            hintText: "Entrer une étape...",
-                            border: InputBorder.none,
-                          ),
-                          controller: controllerEtape,
                           onSubmitted: (String text) {
-                            print("etape $text");
-                            if(text.isEmpty){
-                              return ;
+                            if (text.isEmpty) {
+                              return;
                             }
                             setState(() {
-                              todolist.add({"etape": text, "isdone": false});
+                              widget.title = text;
                             });
-
                           },
-
-                        ),
+                          decoration: InputDecoration(
+                              labelText: "Titre de la tâche",
+                              hintText: "Entrer le titre de la tâche...",
+                              hintStyle: TextStyle(fontSize: 18.0),
+                              labelStyle: TextStyle(
+                                  color: Colors.black54,
+                                  fontWeight: FontWeight.normal),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    color: Colors.transparent, width: 2.0),
+                                borderRadius: BorderRadius.circular(25.0),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    width: 2, color: Colors.black54),
+                                borderRadius: BorderRadius.circular(15),
+                              )),
+                          controller: controllerTitle,
+                          style: TextStyle(
+                            fontSize: 22.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ))
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: 8.0,
+                        bottom: 8.0,
+                        right: 10.0,
+                        left: 12.0,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          left: 25,
-                          top: 25,
+                      child: TextField(
+                        maxLines: 3,
+                        autofocus: true,
+                        minLines: 1,
+                        maxLength: 100,
+                        onSubmitted: (String text) {
+                          if (text.isEmpty) {
+                            return;
+                          }
+                          setState(() {
+                            widget.desc = text;
+                          });
+                        },
+                        decoration: InputDecoration(
+                          labelText: "Description",
+                          hintText: "Entrer la description de la tâche...",
+                          labelStyle:
+                              TextStyle(color: Colors.black54, fontSize: 18.0),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Colors.transparent, width: 2.0),
+                            borderRadius: BorderRadius.circular(25.0),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                width: 2, color: Colors.black54),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
                         ),
-                        child: Row(
-                          children: [
-                            Text((() {
-                              /*
-                              if (date == null) {
-                                return "Pas de date de fin";
-                              }*/
-                              //return "Date de fin : ${_date}  ${_time}";
-                              return "Date de fin : ${widget.date}  ${widget.time}";
-                            })())
-                          ],
-                        ),
+                        controller: controllerDescription,
                       ),
-                    ],
-                  )
-                ],
+                    ),
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(0.0),
+                        ),
+                        todolist != null
+                            ? ListView(
+                                shrinkWrap: true,
+                                children: todolist!.map((data) {
+                                  return ToDoWidget(
+                                    isDone: data['isdone'],
+                                    text: data['etape'],
+                                    onChange: () => setState(() {
+                                      data['isdone'] = !data['isdone'];
+                                    }),
+                                  );
+                                }).toList(),
+                              )
+                            : Container(),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: 25,
+                          ),
+                          child: TextField(
+                            decoration: InputDecoration(
+                                hintText: "Entrer une étape...",
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.grey),
+                                ),
+                                suffixIcon: IconButton(
+                                  // Icon to
+                                  icon: Icon(Icons.clear), // clear text
+                                  onPressed: clearText,
+                                )),
+                            controller: controllerEtape,
+                            onSubmitted: (String text) {
+                              print("etape $text");
+                              if (text.isEmpty) {
+                                return;
+                              }
+                              setState(() {
+                                todolist.add({"etape": text, "isdone": false});
+                              });
+                              clearText();
+                            },
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: 25,
+                            top: 25,
+                          ),
+                          child: Chip(
+                            label: Text("Date d'échéance : ${_date}  ${_time}"),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
             ]),
           ),
@@ -265,7 +285,7 @@ class _TaskpageState extends State<Taskpage> {
         floatingActionButton: FloatingActionButton.extended(
             elevation: 4.0,
             icon: const Icon(Icons.update),
-            label: const Text("Mettre à jour"),
+            label: const Text("Sauvegarder"),
             backgroundColor: Colors.grey,
             onPressed: () {
               final docTask = FirebaseFirestore.instance
@@ -274,14 +294,14 @@ class _TaskpageState extends State<Taskpage> {
               docTask.update({
                 'title': controllerTitle.text,
                 'desc': controllerDescription.text,
-                'color': myColor.value  ,
+                'color': myColor.value,
                 'image': bytesToBase64(imageUser),
                 'date': _date,
                 'time': _time,
-                'todolist' : todolist,
+                'todolist': todolist,
               });
               //revenir en arrière
-                Navigator.pop(context);
+              Navigator.pop(context);
             }),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         bottomNavigationBar: BottomAppBar(
@@ -297,7 +317,7 @@ class _TaskpageState extends State<Taskpage> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Choisis une couleur'),
+                        title: Text('Modifier la couleur'),
                         content: SingleChildScrollView(
                           child: ColorPicker(
                             pickerColor: myColor, //default color
@@ -311,7 +331,7 @@ class _TaskpageState extends State<Taskpage> {
                         ),
                         actions: <Widget>[
                           ElevatedButton(
-                            child: const Text('Valider'),
+                            child: const Text('OK'),
                             onPressed: () {
                               //couleurFinal = int.parse(valueString, radix: 16);
                               Navigator.of(context)
@@ -430,6 +450,10 @@ class _TaskpageState extends State<Taskpage> {
       return null;
     }
     return base64Decode(base64);
+  }
+
+  void clearText() {
+    controllerEtape.clear();
   }
 }
 
