@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:projetflutter_nam/screens/homepage.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -22,6 +23,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context){
     return const MaterialApp(
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate
+      ],
+      supportedLocales: [
+        const Locale('en'),
+        const Locale('fr')
+      ],
       home: Homepage(),
     );
   }

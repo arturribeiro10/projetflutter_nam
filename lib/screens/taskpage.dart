@@ -288,6 +288,7 @@ class _TaskpageState extends State<Taskpage> {
                                               DateTime? newDate =
                                               await showDatePicker(
                                                 context: context,
+                                                locale: const Locale("fr", "FR"),
                                                 initialDate: DateTime.now(),
                                                 firstDate: DateTime(2022),
                                                 lastDate: DateTime(2100),

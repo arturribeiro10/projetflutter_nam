@@ -10,6 +10,7 @@ import 'package:projetflutter_nam/widgets.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:projetflutter_nam/imagemanager.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'dart:io';
 import 'homepage.dart';
 
@@ -263,7 +264,8 @@ class _NewTaskPageState extends State<NewTaskPage> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        title: Text('Sélectionner une échéance'),
+                                        title:
+                                            Text('Sélectionner une échéance'),
                                         actions: <Widget>[
                                           ElevatedButton(
                                             child: Icon(Icons.calendar_month),
@@ -271,26 +273,36 @@ class _NewTaskPageState extends State<NewTaskPage> {
                                               DateTime? newDate =
                                                   await showDatePicker(
                                                 context: context,
+                                                locale:
+                                                    const Locale("fr", "FR"),
                                                 initialDate: DateTime.now(),
                                                 firstDate: DateTime(2022),
                                                 lastDate: DateTime(2100),
-                                                    builder: (context, child) {
-                                                      return Theme(
-                                                        data: Theme.of(context).copyWith(
-                                                          colorScheme: ColorScheme.light(
-                                                            primary: primaryColor, // <-- SEE HERE
-                                                            onPrimary: Colors.white, // <-- SEE HERE
-                                                            onSurface: Colors.black, // <-- SEE HERE
-                                                          ),
-                                                          textButtonTheme: TextButtonThemeData(
-                                                            style: TextButton.styleFrom(
-                                                              primary: Colors.black, // button text color
-                                                            ),
-                                                          ),
+                                                builder: (context, child) {
+                                                  return Theme(
+                                                    data: Theme.of(context)
+                                                        .copyWith(
+                                                      colorScheme:
+                                                          ColorScheme.light(
+                                                        primary: primaryColor,
+                                                        // <-- SEE HERE
+                                                        onPrimary: Colors.white,
+                                                        // <-- SEE HERE
+                                                        onSurface: Colors
+                                                            .black, // <-- SEE HERE
+                                                      ),
+                                                      textButtonTheme:
+                                                          TextButtonThemeData(
+                                                        style: TextButton
+                                                            .styleFrom(
+                                                          primary: Colors
+                                                              .black, // button text color
                                                         ),
-                                                        child: child!,
-                                                      );
-                                                    },
+                                                      ),
+                                                    ),
+                                                    child: child!,
+                                                  );
+                                                },
                                               );
                                               if (newDate == null) return;
                                               setState(() => date = newDate);
@@ -298,8 +310,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                                                   "${newDate.day.toString().padLeft(2, '0')}-${newDate.month.toString().padLeft(2, '0')}-${newDate.year.toString()}";
                                             },
                                             style: ElevatedButton.styleFrom(
-                                              primary: primaryColor
-                                            ),
+                                                primary: primaryColor),
                                           ),
                                           ElevatedButton(
                                             child: Icon(Icons.more_time),
@@ -308,23 +319,31 @@ class _NewTaskPageState extends State<NewTaskPage> {
                                                   await showTimePicker(
                                                 context: context,
                                                 initialTime: TimeOfDay.now(),
-                                                    builder: (context, child) {
-                                                      return Theme(
-                                                        data: Theme.of(context).copyWith(
-                                                          colorScheme: ColorScheme.light(
-                                                            primary: primaryColor, // <-- SEE HERE
-                                                            onPrimary: Colors.white, // <-- SEE HERE
-                                                            onSurface: Colors.black, // <-- SEE HERE
-                                                          ),
-                                                          textButtonTheme: TextButtonThemeData(
-                                                            style: TextButton.styleFrom(
-                                                              primary: Colors.black, // button text color
-                                                            ),
-                                                          ),
+                                                builder: (context, child) {
+                                                  return Theme(
+                                                    data: Theme.of(context)
+                                                        .copyWith(
+                                                      colorScheme:
+                                                          ColorScheme.light(
+                                                        primary: primaryColor,
+                                                        // <-- SEE HERE
+                                                        onPrimary: Colors.white,
+                                                        // <-- SEE HERE
+                                                        onSurface: Colors
+                                                            .black, // <-- SEE HERE
+                                                      ),
+                                                      textButtonTheme:
+                                                          TextButtonThemeData(
+                                                        style: TextButton
+                                                            .styleFrom(
+                                                          primary: Colors
+                                                              .black, // button text color
                                                         ),
-                                                        child: child!,
-                                                      );
-                                                    },
+                                                      ),
+                                                    ),
+                                                    child: child!,
+                                                  );
+                                                },
                                               );
                                               if (newTime == null) return;
 
@@ -333,8 +352,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                                                   "${newTime.hour}:${newTime.minute}";
                                             },
                                             style: ElevatedButton.styleFrom(
-                                                primary: primaryColor
-                                            ),
+                                                primary: primaryColor),
                                           ),
                                           SizedBox(
                                             width: 20,
