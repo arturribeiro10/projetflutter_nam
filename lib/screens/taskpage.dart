@@ -369,11 +369,10 @@ class _TaskpageState extends State<Taskpage> {
             ]),
           ),
         ),
-        floatingActionButton: FloatingActionButton.extended(
+        floatingActionButton: FloatingActionButton(
             elevation: 4.0,
-            icon: const Icon(Icons.update),
-            label: const Text("Sauvegarder"),
-            backgroundColor: Colors.grey,
+            child : const Icon(Icons.update),
+            backgroundColor: primaryColor,
             onPressed: () {
               final docTask = FirebaseFirestore.instance
                   .collection('taches')
@@ -392,7 +391,7 @@ class _TaskpageState extends State<Taskpage> {
             }),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         bottomNavigationBar: BottomAppBar(
-          color: Colors.white70,
+          color: secondaryColor,
           child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
             IconButton(
               iconSize: 36.0,

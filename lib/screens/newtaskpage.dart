@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -351,11 +352,10 @@ class _NewTaskPageState extends State<NewTaskPage> {
             ]),
           ),
         ),
-        floatingActionButton: FloatingActionButton.extended(
+        floatingActionButton: FloatingActionButton(
             elevation: 4.0,
-            icon: const Icon(Icons.add),
-            label: const Text("Ajouter"),
-            backgroundColor: Colors.grey,
+            child: const Icon(Icons.add),
+            backgroundColor: primaryColor,
             onPressed: () {
               final task = NewTaskPage(
                 title: controllerTitle.text,
@@ -372,7 +372,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
             }),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         bottomNavigationBar: BottomAppBar(
-          color: Colors.white70,
+          color: secondaryColor,
           child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
             IconButton(
               iconSize: 36.0,
