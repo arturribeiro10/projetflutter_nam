@@ -10,7 +10,6 @@ import 'package:projetflutter_nam/widgets.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:projetflutter_nam/imagemanager.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'dart:io';
 import 'homepage.dart';
 
