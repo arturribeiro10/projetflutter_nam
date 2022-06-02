@@ -40,6 +40,10 @@ class _TaskpageState extends State<Taskpage> {
   final Stream<QuerySnapshot> _tasksStream =
       FirebaseFirestore.instance.collection('todo').snapshots();
 
+  final primaryColor = Colors.orange;
+  final secondaryColor = Colors.orange.shade100;
+
+
   //attribut colorPicker
   late Color myColor;
 
@@ -241,7 +245,7 @@ class _TaskpageState extends State<Taskpage> {
                             left: 25,
                           ),
                           child: TextField(
-                            autofocus: true,
+                            autofocus: false,
                             decoration: InputDecoration(
                                 hintText: "Entrer une étape...",
                                 focusedBorder: UnderlineInputBorder(
@@ -270,10 +274,94 @@ class _TaskpageState extends State<Taskpage> {
                             left: 25,
                             top: 25,
                           ),
-                          child: Chip(
-                            label: Text("Date d'échéance : ${_date}  ${_time}"),
+                          child: ActionChip(
+                              label: Text("Échéance : ${_date}  ${_time}"),
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text('Sélectionner une échéance'),
+                                        actions: <Widget>[
+                                          ElevatedButton(
+                                            child: Icon(Icons.calendar_month),
+                                            onPressed: () async {
+                                              DateTime? newDate =
+                                              await showDatePicker(
+                                                context: context,
+                                                initialDate: DateTime.now(),
+                                                firstDate: DateTime(2022),
+                                                lastDate: DateTime(2100),
+                                                builder: (context, child) {
+                                                  return Theme(
+                                                    data: Theme.of(context).copyWith(
+                                                      colorScheme: ColorScheme.light(
+                                                        primary: primaryColor, // <-- SEE HERE
+                                                        onPrimary: Colors.white, // <-- SEE HERE
+                                                        onSurface: Colors.black, // <-- SEE HERE
+                                                      ),
+                                                      textButtonTheme: TextButtonThemeData(
+                                                        style: TextButton.styleFrom(
+                                                          primary: Colors.black, // button text color
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    child: child!,
+                                                  );
+                                                },
+                                              );
+                                              if (newDate == null) return;
+                                              setState(() => date = newDate);
+                                              _date =
+                                              "${newDate.day.toString().padLeft(2, '0')}-${newDate.month.toString().padLeft(2, '0')}-${newDate.year.toString()}";
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                                primary: primaryColor
+                                            ),
+                                          ),
+                                          ElevatedButton(
+                                            child: Icon(Icons.more_time),
+                                            onPressed: () async {
+                                              TimeOfDay? newTime =
+                                              await showTimePicker(
+                                                context: context,
+                                                initialTime: TimeOfDay.now(),
+                                                builder: (context, child) {
+                                                  return Theme(
+                                                    data: Theme.of(context).copyWith(
+                                                      colorScheme: ColorScheme.light(
+                                                        primary: primaryColor, // <-- SEE HERE
+                                                        onPrimary: Colors.white, // <-- SEE HERE
+                                                        onSurface: Colors.black, // <-- SEE HERE
+                                                      ),
+                                                      textButtonTheme: TextButtonThemeData(
+                                                        style: TextButton.styleFrom(
+                                                          primary: Colors.black, // button text color
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    child: child!,
+                                                  );
+                                                },
+                                              );
+                                              if (newTime == null) return;
+
+                                              setState(() => time = newTime);
+                                              _time =
+                                              "${newTime.hour}:${newTime.minute}";
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                                primary: primaryColor
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 20,
+                                          ),
+                                        ],
+                                      );
+                                    });
+                              }),
                           ),
-                        ),
                       ],
                     )
                   ],

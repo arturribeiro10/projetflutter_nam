@@ -22,6 +22,14 @@ class TaskCardWidget extends StatelessWidget {
         bottom: 20.0,
       ),
       decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 4,
+            offset: Offset(0, 3),
+          )
+        ],
           color: color,
           borderRadius: BorderRadius.circular(20.0)
       ),
@@ -48,7 +56,15 @@ class TaskCardWidget extends StatelessWidget {
                 height: 1.5,
               ),
             ),
-          )
+          ),
+          Padding(
+              padding: const EdgeInsets.only(
+                top: 10.0,
+              ),
+                child: Chip(
+                  label: Text("Échéance : ${date}  ${time}"),
+                ),
+              )
         ],
       ),
     );
@@ -101,6 +117,13 @@ class ToDoWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+class NoGlowScroll extends ScrollBehavior {
+  @override
+  Widget buildViewportChrome(
+      BuildContext context, Widget child, AxisDirection axisDirection) {
+    return child;
   }
 }
 

@@ -51,6 +51,9 @@ class _NewTaskPageState extends State<NewTaskPage> {
   final controllerTitle = TextEditingController();
   final controllerDescription = TextEditingController();
 
+  final primaryColor = Colors.orange;
+  final secondaryColor = Colors.orange.shade100;
+
   //attribut colorPicker
   Color myColor = Colors.white;
 
@@ -140,7 +143,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                         ),
                         Expanded(
                             child: TextField(
-                              autofocus: true,
+                          autofocus: true,
                           onSubmitted: (value) {
                             print("Titre de la tâche: $value");
                           },
@@ -251,10 +254,94 @@ class _NewTaskPageState extends State<NewTaskPage> {
                             left: 25,
                             top: 25,
                           ),
-                          child: Chip(
-                            label: Text("Date d'échéance : ${_date}  ${_time}"),
-                          ),
-                        ),
+                          child: ActionChip(
+                              label: Text("Échéance : ${_date}  ${_time}"),
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text('Sélectionner une échéance'),
+                                        actions: <Widget>[
+                                          ElevatedButton(
+                                            child: Icon(Icons.calendar_month),
+                                            onPressed: () async {
+                                              DateTime? newDate =
+                                                  await showDatePicker(
+                                                context: context,
+                                                initialDate: DateTime.now(),
+                                                firstDate: DateTime(2022),
+                                                lastDate: DateTime(2100),
+                                                    builder: (context, child) {
+                                                      return Theme(
+                                                        data: Theme.of(context).copyWith(
+                                                          colorScheme: ColorScheme.light(
+                                                            primary: primaryColor, // <-- SEE HERE
+                                                            onPrimary: Colors.white, // <-- SEE HERE
+                                                            onSurface: Colors.black, // <-- SEE HERE
+                                                          ),
+                                                          textButtonTheme: TextButtonThemeData(
+                                                            style: TextButton.styleFrom(
+                                                              primary: Colors.black, // button text color
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        child: child!,
+                                                      );
+                                                    },
+                                              );
+                                              if (newDate == null) return;
+                                              setState(() => date = newDate);
+                                              _date =
+                                                  "${newDate.day.toString().padLeft(2, '0')}-${newDate.month.toString().padLeft(2, '0')}-${newDate.year.toString()}";
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              primary: primaryColor
+                                            ),
+                                          ),
+                                          ElevatedButton(
+                                            child: Icon(Icons.more_time),
+                                            onPressed: () async {
+                                              TimeOfDay? newTime =
+                                                  await showTimePicker(
+                                                context: context,
+                                                initialTime: TimeOfDay.now(),
+                                                    builder: (context, child) {
+                                                      return Theme(
+                                                        data: Theme.of(context).copyWith(
+                                                          colorScheme: ColorScheme.light(
+                                                            primary: primaryColor, // <-- SEE HERE
+                                                            onPrimary: Colors.white, // <-- SEE HERE
+                                                            onSurface: Colors.black, // <-- SEE HERE
+                                                          ),
+                                                          textButtonTheme: TextButtonThemeData(
+                                                            style: TextButton.styleFrom(
+                                                              primary: Colors.black, // button text color
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        child: child!,
+                                                      );
+                                                    },
+                                              );
+                                              if (newTime == null) return;
+
+                                              setState(() => time = newTime);
+                                              _time =
+                                                  "${newTime.hour}:${newTime.minute}";
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                                primary: primaryColor
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 20,
+                                          ),
+                                        ],
+                                      );
+                                    });
+                              }),
+                        )
                       ],
                     )
                   ],
@@ -316,52 +403,6 @@ class _NewTaskPageState extends State<NewTaskPage> {
                               Navigator.of(context)
                                   .pop(); //dismiss the color picker
                             },
-                          ),
-                        ],
-                      );
-                    });
-              },
-            ),
-            IconButton(
-              iconSize: 36.0,
-              icon: Icon(Icons.calendar_month),
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Sélectionner une date'),
-                        actions: <Widget>[
-                          ElevatedButton(
-                            child: Icon(Icons.calendar_month),
-                            onPressed: () async {
-                              DateTime? newDate = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: DateTime(2022),
-                                lastDate: DateTime(2100),
-                              );
-                              if (newDate == null) return;
-                              setState(() => date = newDate);
-                              _date =
-                                  "${newDate.day.toString().padLeft(2, '0')}-${newDate.month.toString().padLeft(2, '0')}-${newDate.year.toString()}";
-                            },
-                          ),
-                          ElevatedButton(
-                            child: Icon(Icons.more_time),
-                            onPressed: () async {
-                              TimeOfDay? newTime = await showTimePicker(
-                                context: context,
-                                initialTime: TimeOfDay.now(),
-                              );
-                              if (newTime == null) return;
-
-                              setState(() => time = newTime);
-                              _time = "${newTime.hour}:${newTime.minute}";
-                            },
-                          ),
-                          SizedBox(
-                            width: 20,
                           ),
                         ],
                       );

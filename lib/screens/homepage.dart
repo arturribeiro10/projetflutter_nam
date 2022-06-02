@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,14 +20,16 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  final primaryColor = Colors.orange;
+  final secondaryColor = Colors.orange.shade100;
   final Stream<QuerySnapshot> _tasksStream =
       FirebaseFirestore.instance.collection('taches').snapshots();
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: primaryColor,
         leading: IconButton(
           icon: Icon(Icons.search),
           onPressed: () {
@@ -41,21 +44,15 @@ class _HomepageState extends State<Homepage> {
         child: Container(
           width: double.infinity,
           padding: const EdgeInsets.symmetric(
-            horizontal: 24.0,
-            //vertical: 32.0,
+            horizontal: 16.0,
+            vertical: 0.0,
           ),
-          color: Color(0xFFB0BEC5),
-          child: Stack(children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(
-                    top: 32.0,
-                    bottom: 32.0,
-                  ),
-                ),
-                StreamBuilder<QuerySnapshot>(
+          color: secondaryColor,
+          child: Expanded(
+            child: ListView(children: [
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: StreamBuilder<QuerySnapshot>(
                   stream: _tasksStream,
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -67,69 +64,61 @@ class _HomepageState extends State<Homepage> {
                     }
 
                     return ListView(
+                      physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      children:snapshot.data!.docs.map((DocumentSnapshot document) {
-                        Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-                        return
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>  Taskpage(
-                                          id: document.id,
-                                          title: document.get('title'),
-                                          desc: document.get('desc'),
-                                          color: data['color'] != null ? Color(data['color']) : Colors.white,
-                                          date: document.get('date'),
-                                          time: document.get('time'),
-                                          image: document.get('image'),
-                                          todolist: document.get('todolist')
-                                      ),
-                                  )
-                              );
-                            },
-                            child: TaskCardWidget(
+                      children:
+                          snapshot.data!.docs.map((DocumentSnapshot document) {
+                        Map<String, dynamic> data =
+                            document.data()! as Map<String, dynamic>;
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Taskpage(
+                                      id: document.id,
+                                      title: document.get('title'),
+                                      desc: document.get('desc'),
+                                      color: data['color'] != null
+                                          ? Color(data['color'])
+                                          : Colors.white,
+                                      date: document.get('date'),
+                                      time: document.get('time'),
+                                      image: document.get('image'),
+                                      todolist: document.get('todolist')),
+                                ));
+                          },
+                          child: TaskCardWidget(
                               id: data['id'],
                               title: data['title'],
                               desc: data['desc'],
-                              color: data['color'] != null ? Color(data['color']) : Colors.white,
-                          ),
-
+                              color: data['color'] != null
+                                  ? Color(data['color'])
+                                  : Colors.white,
+                              date: null),
                         );
                       }).toList(),
                     );
                   },
-                )
-              ],
-            ),
-            Positioned(
-                bottom: 24.0,
-                right: 0.0,
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => NewTaskPage(
-                              )),
-                    );
-                  },
-                  child: Container(
-                      child: Icon(
-                    Icons.add_box_rounded,
-                    size: 72.0,
-                    color: Colors.blue,
-                  )),
-                )),
-          ]),
+                ),
+              ),
+            ]),
+          ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => NewTaskPage()),
+          );
+        },
+        backgroundColor: primaryColor,
+        child: Icon(Icons.add),
       ),
     );
   }
 }
-
-
 
 /*
  * Author : Nicolas

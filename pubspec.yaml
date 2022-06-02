@@ -39,6 +39,7 @@ dependencies:
   date_format: ^2.0.6
 
   cloud_firestore: ^3.1.15
+  no_glow_scroll: ^0.0.2
 
 dev_dependencies:
   flutter_test:
