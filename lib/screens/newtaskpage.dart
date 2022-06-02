@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:projetflutter_nam/widgets.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:projetflutter_nam/imagemanager.dart';
 import 'dart:io';
 import 'homepage.dart';
 
@@ -360,7 +361,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                 title: controllerTitle.text,
                 desc: controllerDescription.text,
                 color: myColor,
-                image: bytesToBase64(imageUser),
+                image: ImageManager.bytesToBase64(imageUser),
                 date: _date,
                 time: _time,
                 todolist: todolist,
@@ -450,20 +451,6 @@ class _NewTaskPageState extends State<NewTaskPage> {
 
     final json = task.toJson();
     await docTask.set(json);
-  }
-
-  static String? bytesToBase64(Uint8List? bytes) {
-    if (bytes == null) {
-      return null;
-    }
-    return base64Encode(bytes);
-  }
-
-  static Uint8List? base64ToBytes(String base64) {
-    if (base64.isEmpty) {
-      return null;
-    }
-    return base64Decode(base64);
   }
 
   void clearText() {

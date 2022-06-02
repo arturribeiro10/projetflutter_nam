@@ -9,6 +9,7 @@ import 'package:projetflutter_nam/widgets.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import '../imagemanager.dart';
 import 'homepage.dart';
 
 class Taskpage extends StatefulWidget {
@@ -46,10 +47,8 @@ class _TaskpageState extends State<Taskpage> {
 
   //attribut colorPicker
   late Color myColor;
-
-  //attribut
+  //attribut imagepicker
   Uint8List? imageUser;
-
   //attributs Date & Time Picker
   DateTime? date;
   TimeOfDay? time;
@@ -383,7 +382,7 @@ class _TaskpageState extends State<Taskpage> {
                 'title': controllerTitle.text,
                 'desc': controllerDescription.text,
                 'color': myColor.value,
-                'image': bytesToBase64(imageUser),
+                'image': ImageManager.bytesToBase64(imageUser),
                 'date': _date,
                 'time': _time,
                 'todolist': todolist,
@@ -526,19 +525,6 @@ class _TaskpageState extends State<Taskpage> {
         ));
   }
 
-  static String? bytesToBase64(Uint8List? bytes) {
-    if (bytes == null) {
-      return null;
-    }
-    return base64Encode(bytes);
-  }
-
-  static Uint8List? base64ToBytes(String base64) {
-    if (base64.isEmpty) {
-      return null;
-    }
-    return base64Decode(base64);
-  }
 
   void clearText() {
     controllerEtape.clear();
