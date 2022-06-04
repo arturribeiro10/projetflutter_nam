@@ -2,16 +2,19 @@ import 'dart:convert';
 
 import 'dart:typed_data';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:projetflutter_nam/screens/homepage.dart';
 import 'package:projetflutter_nam/widgets.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:projetflutter_nam/imagemanager.dart';
-import 'dart:io';
-import 'homepage.dart';
+import 'package:projetflutter_nam/notifications.dart';
+import 'package:projetflutter_nam/utilities.dart';
+
 
 class NewTaskPage extends StatefulWidget {
   NewTaskPage(
@@ -23,7 +26,8 @@ class NewTaskPage extends StatefulWidget {
       this.date,
       this.time,
       this.image,
-      this.todolist})
+      this.todolist,
+      this.tags})
       : super(key: key);
   var id;
   final title;
@@ -33,6 +37,7 @@ class NewTaskPage extends StatefulWidget {
   final time;
   final image;
   final List<dynamic>? todolist;
+  final List<dynamic>? tags;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -43,6 +48,7 @@ class NewTaskPage extends StatefulWidget {
         'date': date,
         'time': time,
         'todolist': todolist,
+        'tags' : tags,
       };
 
   @override
@@ -50,6 +56,7 @@ class NewTaskPage extends StatefulWidget {
 }
 
 class _NewTaskPageState extends State<NewTaskPage> {
+
   final controllerTitle = TextEditingController();
   final controllerDescription = TextEditingController();
 
@@ -72,22 +79,30 @@ class _NewTaskPageState extends State<NewTaskPage> {
   String? valueString;
 
   List<dynamic>? todolist;
+  //List<dynamic>? tags;
 
   final controllerEtape = TextEditingController();
 
   void initState() {
     print("ID de la tâche: ${widget.id}");
     print("Titre de la tâche: ${widget.title}");
-    print("Description de la tâhe: ${widget.desc}");
-    print("Couleur de la tâhe: ${widget.color}");
-    print("Date de la tâhe: ${widget.date}");
-    print("Heure de la tâhe: ${widget.time}");
+    print("Description de la tâche: ${widget.desc}");
+    print("Couleur de la tâche: ${widget.color}");
+    print("Date de la tâche: ${widget.date}");
+    print("Heure de la tâche: ${widget.time}");
 
     todolist = widget.todolist ?? [];
+    //tags = widget.tags ?? [];
 
     myColor = widget.color;
 
     super.initState();
+  }
+  @override
+  void dispose() {
+    AwesomeNotifications().actionSink.close();
+    AwesomeNotifications().createdSink.close();
+    super.dispose();
   }
 
   //Méthodes pour l'image picker
@@ -138,7 +153,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                             ),
                             child: Icon(
                               Icons.arrow_back_rounded,
-                              color: Colors.black,
+                              color: Colors.grey,
                               size: 36.0,
                             ),
                           ),
@@ -152,9 +167,15 @@ class _NewTaskPageState extends State<NewTaskPage> {
                           decoration: InputDecoration(
                               labelText: "Titre de la tâche",
                               hintText: "Entrer le titre de la tâche...",
-                              hintStyle: TextStyle(fontSize: 18.0),
+                              hintStyle: TextStyle(
+                                  fontSize: 18.0,
+                                  color: myColor.computeLuminance() > 0.5
+                                      ? Colors.black
+                                      : Colors.white),
                               labelStyle: TextStyle(
-                                  color: Colors.black54,
+                                  color: myColor.computeLuminance() > 0.5
+                                      ? Colors.black
+                                      : Colors.white,
                                   fontWeight: FontWeight.normal),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: const BorderSide(
@@ -170,7 +191,9 @@ class _NewTaskPageState extends State<NewTaskPage> {
                           style: TextStyle(
                             fontSize: 22.0,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                            color: myColor.computeLuminance() > 0.5
+                                ? Colors.black
+                                : Colors.white,
                           ),
                         ))
                       ],
@@ -193,8 +216,11 @@ class _NewTaskPageState extends State<NewTaskPage> {
                         decoration: InputDecoration(
                           labelText: "Description",
                           hintText: "Entrer la description de la tâche...",
-                          labelStyle:
-                              TextStyle(color: Colors.black54, fontSize: 18.0),
+                          labelStyle: TextStyle(
+                              color: myColor.computeLuminance() > 0.5
+                                  ? Colors.black
+                                  : Colors.white,
+                              fontSize: 18.0),
                           enabledBorder: OutlineInputBorder(
                             borderSide: const BorderSide(
                                 color: Colors.transparent, width: 2.0),
@@ -234,13 +260,23 @@ class _NewTaskPageState extends State<NewTaskPage> {
                           child: TextField(
                             decoration: InputDecoration(
                                 hintText: "Entrer une étape...",
+                                hintStyle: TextStyle(
+                                    color: myColor.computeLuminance() > 0.5
+                                        ? Colors.black
+                                        : Colors.white),
                                 focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey),
+                                  borderSide: BorderSide(
+                                      color: myColor.computeLuminance() > 0.5
+                                          ? Colors.black
+                                          : Colors.white),
                                 ),
                                 suffixIcon: IconButton(
                                   // Icon to
                                   icon: Icon(Icons.clear), // clear text
                                   onPressed: clearText,
+                                  color: myColor.computeLuminance() > 0.5
+                                      ? Colors.black
+                                      : Colors.white,
                                 )),
                             controller: controllerEtape,
                             onSubmitted: (String text) {
@@ -348,7 +384,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
 
                                               setState(() => time = newTime);
                                               _time =
-                                                  "${newTime.hour}:${newTime.minute}";
+                                                  "${newTime.hour.toString().padLeft(2,'0')}:${newTime.minute.toString().padLeft(2,'0')}";
                                             },
                                             style: ElevatedButton.styleFrom(
                                                 primary: primaryColor),
@@ -360,7 +396,14 @@ class _NewTaskPageState extends State<NewTaskPage> {
                                       );
                                     });
                               }),
-                        )
+                        ),
+                        Padding(
+                            padding: const EdgeInsets.only(
+                              left: 25,
+                              top: 25,
+                            ),
+                         //TODO add tags here
+                          )
                       ],
                     )
                   ],
@@ -384,6 +427,12 @@ class _NewTaskPageState extends State<NewTaskPage> {
                 todolist: todolist,
               );
               createTask(task);
+              if (date != null) {
+                creerNotificationFinEcheance(
+                    NotificationDateAndTime(
+                        date: date!,
+                        timeOfDay: time!));
+              }
               //revenir en arrière
               Navigator.pop(context);
             }),

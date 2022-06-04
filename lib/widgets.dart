@@ -62,7 +62,7 @@ class TaskCardWidget extends StatelessWidget {
                 top: 10.0,
               ),
                 child: Chip(
-                  label: Text("Échéance : ${date}  ${time}"),
+                  label: date.isNotEmpty  ? Text("Échéance : ${date}  ${time}") : Text("Pas d'échéance"),
                 ),
               )
         ],

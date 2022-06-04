@@ -42,6 +42,7 @@ dependencies:
 
   cloud_firestore: ^3.1.15
   no_glow_scroll: ^0.0.2
+  awesome_notifications: ^0.6.21
 
 dev_dependencies:
   flutter_test:
