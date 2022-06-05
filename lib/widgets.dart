@@ -138,11 +138,26 @@ class ToDoWidget extends StatelessWidget {
   }
 }
 
-class NoGlowScroll extends ScrollBehavior {
+class TagWidget extends StatelessWidget {
+  const TagWidget({this.text});
+  final text;
+
   @override
-  Widget buildViewportChrome(
-      BuildContext context, Widget child, AxisDirection axisDirection) {
-    return child;
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+      // espace entre widget
+      child: Chip(
+        label: Text(
+          text,
+          style: const TextStyle(
+            //color: Colors.blueGrey,
+            fontSize: 16.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
   }
 }
 

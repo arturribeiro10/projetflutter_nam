@@ -76,6 +76,8 @@ class _NewTaskPageState extends State<NewTaskPage> {
   List<dynamic>? todolist;
 
   //List<dynamic>? tags;
+  List<dynamic> tags = [];
+  final controllerTag = TextEditingController();
 
   final controllerEtape = TextEditingController();
 
@@ -293,7 +295,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                                 suffixIcon: IconButton(
                                   // Icon to
                                   icon: Icon(Icons.clear), // clear text
-                                  onPressed: clearText,
+                                  onPressed: clearTextEtape,
                                   color: myColor.computeLuminance() > 0.5
                                       ? Colors.black
                                       : Colors.white,
@@ -303,7 +305,52 @@ class _NewTaskPageState extends State<NewTaskPage> {
                               setState(() {
                                 todolist?.add({"etape": text, "isdone": false});
                               });
-                              clearText();
+                              clearTextEtape();
+                            },
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(0.0),
+                        ),
+                        tags != null
+                            ? Row(
+                          children: tags!.map((data) {
+                            return GestureDetector(
+                              child: TagWidget(
+                                text: data['tags'],
+                                ),
+                                onLongPressUp: () {
+                                  setState(() => tags);
+                                },
+                            );
+                          }).toList(),
+                        )
+                            : Container(),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: 25,
+                          ),
+                          child: TextField(
+                            decoration: InputDecoration(
+                                hintText: "Ajouter un tag",
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.grey),
+                                ),
+                                suffixIcon: IconButton(
+                                  // Icon to
+                                  icon: Icon(Icons.clear), // clear text
+                                  onPressed: clearTextTag,
+                                )),
+                            controller: controllerTag,
+                            onSubmitted: (String text) {
+                              print("tags $text");
+                              if (text.isEmpty) {
+                                return;
+                              }
+                              setState(() {
+                                tags.add({"tags": text});
+                              });
+                              clearTextTag();
                             },
                           ),
                         ),
@@ -462,6 +509,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                 date: _date,
                 time: _time,
                 todolist: todolist,
+                tags: tags,
               );
               createTask(task);
               if (date != null) {
@@ -558,8 +606,11 @@ class _NewTaskPageState extends State<NewTaskPage> {
     await docTask.set(json);
   }
 
-  void clearText() {
+  void clearTextEtape() {
     controllerEtape.clear();
+  }
+  void clearTextTag(){
+    controllerTag.clear();
   }
 }
 
