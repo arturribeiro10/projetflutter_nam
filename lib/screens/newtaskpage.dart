@@ -134,12 +134,27 @@ class _NewTaskPageState extends State<NewTaskPage> {
                 child: ListView(
                   children: [
                     imageUser != null
-                        ? Image.memory(
-                            imageUser!,
-                            width: 275,
-                            height: 275,
+                        ? Padding(
+                          padding: const EdgeInsets.only(bottom: 15),
+                          child: Stack( children: <Widget>[
+                           Center(
+                             child: Container(
+                              child : Image.memory(
+                                  imageUser!,
+                                  width: 275,
+                                  height: 275,
+                                )),
+                           ),
+                            Positioned(
+                              right: 45,
+                            top: 30,
+                            child: InkWell(child: Icon(Icons.remove_circle, size: 30, color: Colors.red),
+                            onTap: () {
+                              setState( () { imageUser = null; },);
+                            },),
                           )
-                        : Text(''),
+                          ]),
+                        ): Text(''),
                     Row(
                       children: [
                         GestureDetector(
@@ -292,7 +307,15 @@ class _NewTaskPageState extends State<NewTaskPage> {
                             left: 25,
                             top: 25,
                           ),
+                          child: GestureDetector(
+                            onLongPressUp: () {
+                              setState(() => _date = ' ');
+                              setState(() => _time = '- ');
+                            },
                           child: ActionChip(
+                              backgroundColor: myColor.computeLuminance() > 0.5
+                                  ? Colors.black12
+                                  : Colors.white,
                               label: Text("Échéance : ${_date}  ${_time}"),
                               onPressed: () {
                                 showDialog(
@@ -396,7 +419,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                                       );
                                     });
                               }),
-                        ),
+                          )),
                         Padding(
                             padding: const EdgeInsets.only(
                               left: 25,
@@ -486,16 +509,20 @@ class _NewTaskPageState extends State<NewTaskPage> {
                       return AlertDialog(
                         title: Text('Importer une image'),
                         actions: <Widget>[
-                          MaterialButton(
+                          ElevatedButton(
                               child: Icon(Icons.image),
                               onPressed: () {
                                 pickImage(ImageSource.gallery);
-                              }),
-                          MaterialButton(
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  primary: primaryColor)),
+                          ElevatedButton(
                               child: Icon(Icons.camera_alt),
                               onPressed: () {
                                 pickImage(ImageSource.camera);
-                              }),
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  primary: primaryColor)),
                           SizedBox(
                             width: 20,
                           ),

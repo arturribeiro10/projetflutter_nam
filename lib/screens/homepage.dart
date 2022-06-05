@@ -1,10 +1,12 @@
 import 'dart:ui';
+import 'dart:convert';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:projetflutter_nam/imagemanager.dart';
 import 'package:projetflutter_nam/screens/taskpage.dart';
 import 'package:projetflutter_nam/widgets.dart';
 import 'dart:async';
@@ -144,7 +146,8 @@ class _HomepageState extends State<Homepage> {
                                   ? Color(data['color'])
                                   : Colors.white,
                               date: data['date'],
-                              time: data['time']),
+                              time: data['time'],
+                          image: data['image'],),
                         );
                       }).toList(),
                     );

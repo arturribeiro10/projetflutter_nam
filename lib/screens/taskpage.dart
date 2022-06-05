@@ -126,19 +126,28 @@ class _TaskpageState extends State<Taskpage> {
                 ),
                 child: ListView(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 15),
-                      child: imageUser != null
-                          ? Image.memory(
-                              imageUser!,
-                              width: 275,
-                              height: 275,
-                            )
-                          : Text(''),
-                    ),
+                    imageUser != null
+                        ? Padding(
+                          padding: const EdgeInsets.only(bottom: 15),
+                          child: Stack( children: <Widget>[
+                      Center(
+                          child: Container(
+                              child : Image.memory(
+                                imageUser!,
+                                width: 275,
+                                height: 275,
+                              )),
+                      ),
+                      Positioned(
+                          right: 45,
+                          top: 30,
+                          child: InkWell(child: Icon(Icons.remove_circle, size: 30, color: Colors.red),
+                            onTap: () {
+                              setState( () { imageUser = null; },);
+                            },),
+                      )
+                    ]),
+                        ): Text(''),
                     Row(
                       children: [
                         GestureDetector(
@@ -170,9 +179,15 @@ class _TaskpageState extends State<Taskpage> {
                           decoration: InputDecoration(
                               labelText: "Titre de la tâche",
                               hintText: "Entrer le titre de la tâche...",
-                              hintStyle: TextStyle(fontSize: 18.0),
+                              hintStyle: TextStyle(
+                                color : myColor.computeLuminance() > 0.5
+                                    ? Colors.black
+                                    : Colors.white,
+                                  fontSize: 18.0),
                               labelStyle: TextStyle(
-                                  color: Colors.black54,
+                                  color: myColor.computeLuminance() > 0.5
+                                      ? Colors.black
+                                      : Colors.white,
                                   fontWeight: FontWeight.normal),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: const BorderSide(
@@ -188,7 +203,9 @@ class _TaskpageState extends State<Taskpage> {
                           style: TextStyle(
                             fontSize: 22.0,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                            color: myColor.computeLuminance() > 0.5
+                                ? Colors.black
+                                : Colors.white,
                           ),
                         ))
                       ],
@@ -216,7 +233,9 @@ class _TaskpageState extends State<Taskpage> {
                           labelText: "Description",
                           hintText: "Entrer la description de la tâche...",
                           labelStyle:
-                              TextStyle(color: Colors.black54, fontSize: 18.0),
+                              TextStyle(color: myColor.computeLuminance() > 0.5
+                                  ? Colors.black
+                                  : Colors.white, fontSize: 18.0),
                           enabledBorder: OutlineInputBorder(
                             borderSide: const BorderSide(
                                 color: Colors.transparent, width: 2.0),
@@ -258,13 +277,23 @@ class _TaskpageState extends State<Taskpage> {
                             autofocus: false,
                             decoration: InputDecoration(
                                 hintText: "Entrer une étape...",
+                                hintStyle: TextStyle(
+                                  color: myColor.computeLuminance() > 0.5
+                                      ? Colors.black
+                                      : Colors.white
+                                ),
                                 focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey),
+                                  borderSide: BorderSide(color: myColor.computeLuminance() > 0.5
+                                      ? Colors.black
+                                      : Colors.white),
                                 ),
                                 suffixIcon: IconButton(
                                   // Icon to
                                   icon: Icon(Icons.clear), // clear text
                                   onPressed: clearText,
+                                  color: myColor.computeLuminance() > 0.5
+                                      ? Colors.black
+                                      : Colors.white,
                                 )),
                             controller: controllerEtape,
                             onSubmitted: (String text) {
@@ -287,10 +316,12 @@ class _TaskpageState extends State<Taskpage> {
                           child: GestureDetector(
                             onLongPressUp: () {
                               setState(() => _date = ' ');
-                              setState(() => _time = ' - ');
-                              //TODO suprimmer FireBase
+                              setState(() => _time = '- ');
                             },
                             child: ActionChip(
+                              backgroundColor: myColor.computeLuminance() > 0.5
+                                  ? Colors.black12
+                                  : Colors.white,
                                 label: _date.isEmpty ? Text("Échéance :  ${widget.date} ${widget.time}") : Text("Échéance :  ${_date} ${_time}"),
                                 onPressed: () {
                                   showDialog(
@@ -456,52 +487,6 @@ class _TaskpageState extends State<Taskpage> {
             ),
             IconButton(
               iconSize: 36.0,
-              icon: Icon(Icons.calendar_month),
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Sélectionner une date'),
-                        actions: <Widget>[
-                          ElevatedButton(
-                            child: Icon(Icons.calendar_month),
-                            onPressed: () async {
-                              DateTime? newDate = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: DateTime(2022),
-                                lastDate: DateTime(2100),
-                              );
-                              if (newDate == null) return;
-                              setState(() => date = newDate);
-                              _date =
-                                  "${newDate.day.toString().padLeft(2, '0')}-${newDate.month.toString().padLeft(2, '0')}-${newDate.year.toString()}";
-                            },
-                          ),
-                          ElevatedButton(
-                            child: Icon(Icons.more_time),
-                            onPressed: () async {
-                              TimeOfDay? newTime = await showTimePicker(
-                                context: context,
-                                initialTime: TimeOfDay.now(),
-                              );
-                              if (newTime == null) return;
-
-                              setState(() => time = newTime);
-                              _time = "${newTime.hour}:${newTime.minute}";
-                            },
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                        ],
-                      );
-                    });
-              },
-            ),
-            IconButton(
-              iconSize: 36.0,
               icon: Icon(Icons.image),
               onPressed: () {
                 showDialog(
@@ -510,16 +495,20 @@ class _TaskpageState extends State<Taskpage> {
                       return AlertDialog(
                         title: Text('Importer une image'),
                         actions: <Widget>[
-                          MaterialButton(
+                          ElevatedButton(
                               child: Icon(Icons.image),
                               onPressed: () {
                                 pickImage(ImageSource.gallery);
-                              }),
-                          MaterialButton(
+                              },
+                              style: ElevatedButton.styleFrom(
+                                primary: primaryColor)),
+                          ElevatedButton(
                               child: Icon(Icons.camera_alt),
                               onPressed: () {
                                 pickImage(ImageSource.camera);
-                              }),
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  primary: primaryColor)),
                           SizedBox(
                             width: 20,
                           ),

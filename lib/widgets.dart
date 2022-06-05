@@ -1,4 +1,8 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:projetflutter_nam/imagemanager.dart';
 
 class TaskCardWidget extends StatelessWidget {
   final id;
@@ -7,8 +11,9 @@ class TaskCardWidget extends StatelessWidget {
   late final Color color;
   late final date;
   late final time;
+  late final image;
 
-  TaskCardWidget({required this.title, required this.desc, required this.color, this.id, this.date, this.time});
+  TaskCardWidget({required this.title, required this.desc, required this.color, this.id, this.date, this.time, this.image});
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +41,15 @@ class TaskCardWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 30),
+            child: Center(
+              child: image != null ?
+              Image.memory(base64Decode(image),
+              width: 200,
+              height: 200,) : null,
+            ),
+          ),
           Text(
             title ?? "(unnamed task)",
             style: const TextStyle(
@@ -62,7 +76,7 @@ class TaskCardWidget extends StatelessWidget {
                 top: 10.0,
               ),
                 child: Chip(
-                  label: date.isNotEmpty  ? Text("Échéance : ${date}  ${time}") : Text("Pas d'échéance"),
+                  label: date.isNotEmpty && date != ' '  ? Text("Échéance : ${date}  ${time}") : Text("Pas d'échéance"),
                 ),
               )
         ],
