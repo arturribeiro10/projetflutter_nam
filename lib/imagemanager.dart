@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-class ImageManager{
+class ImageManager {
   static String? bytesToBase64(Uint8List? bytes) {
     if (bytes == null) {
       return null;
@@ -16,3 +16,7 @@ class ImageManager{
     return base64Decode(base64);
   }
 }
+
+/*
+ * Author : Artur et Nicolas
+ */

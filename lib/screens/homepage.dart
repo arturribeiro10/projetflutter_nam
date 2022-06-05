@@ -1,12 +1,10 @@
 import 'dart:ui';
-import 'dart:convert';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:projetflutter_nam/imagemanager.dart';
 import 'package:projetflutter_nam/screens/taskpage.dart';
 import 'package:projetflutter_nam/widgets.dart';
 import 'dart:async';
@@ -65,7 +63,6 @@ class _HomepageState extends State<Homepage> {
                 ));
       }
     });
-
   }
 
   @override
@@ -139,15 +136,16 @@ class _HomepageState extends State<Homepage> {
                                 ));
                           },
                           child: TaskCardWidget(
-                              id: data['id'],
-                              title: data['title'],
-                              desc: data['desc'],
-                              color: data['color'] != null
-                                  ? Color(data['color'])
-                                  : Colors.white,
-                              date: data['date'],
-                              time: data['time'],
-                          image: data['image'],),
+                            id: data['id'],
+                            title: data['title'],
+                            desc: data['desc'],
+                            color: data['color'] != null
+                                ? Color(data['color'])
+                                : Colors.white,
+                            date: data['date'],
+                            time: data['time'],
+                            image: data['image'],
+                          ),
                         );
                       }).toList(),
                     );
@@ -177,7 +175,15 @@ class _HomepageState extends State<Homepage> {
  *  AppBar avec la barre de recherche
  *  + changement visuelle/graphique de la page
  */
-
 /*
  * Author : Artur
+ * création de la structure de la page
+ * récupération des données depuis firebase
+ * envoi des données vers la taskpage
+ */
+/*
+ * Author : Manuel
+ * redesign de la page
+ * restructuration de la page en listview
+ * + bouton flottant add new
  */

@@ -12,7 +12,8 @@ Future<void> notify() async {
   );
 }
 
-Future<void> creerNotificationFinEcheance(NotificationDateAndTime echeance) async {
+Future<void> creerNotificationFinEcheance(
+    NotificationDateAndTime echeance) async {
   await AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: createUniqueId(),
@@ -33,10 +34,13 @@ Future<void> creerNotificationFinEcheance(NotificationDateAndTime echeance) asyn
         second: 0,
         millisecond: 0,
         repeats: true,
-      )
-  );
+      ));
 }
 
 Future<void> cancelScheduledNotifications() async {
   await AwesomeNotifications().cancelAllSchedules();
 }
+
+/*
+ * Author : Manuel
+ */

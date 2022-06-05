@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'dart:typed_data';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -7,14 +5,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:projetflutter_nam/screens/homepage.dart';
 import 'package:projetflutter_nam/widgets.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:projetflutter_nam/imagemanager.dart';
 import 'package:projetflutter_nam/notifications.dart';
 import 'package:projetflutter_nam/utilities.dart';
-
 
 class NewTaskPage extends StatefulWidget {
   NewTaskPage(
@@ -48,7 +44,7 @@ class NewTaskPage extends StatefulWidget {
         'date': date,
         'time': time,
         'todolist': todolist,
-        'tags' : tags,
+        'tags': tags,
       };
 
   @override
@@ -56,7 +52,6 @@ class NewTaskPage extends StatefulWidget {
 }
 
 class _NewTaskPageState extends State<NewTaskPage> {
-
   final controllerTitle = TextEditingController();
   final controllerDescription = TextEditingController();
 
@@ -79,6 +74,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
   String? valueString;
 
   List<dynamic>? todolist;
+
   //List<dynamic>? tags;
 
   final controllerEtape = TextEditingController();
@@ -98,6 +94,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
 
     super.initState();
   }
+
   @override
   void dispose() {
     AwesomeNotifications().actionSink.close();
@@ -135,26 +132,34 @@ class _NewTaskPageState extends State<NewTaskPage> {
                   children: [
                     imageUser != null
                         ? Padding(
-                          padding: const EdgeInsets.only(bottom: 15),
-                          child: Stack( children: <Widget>[
-                           Center(
-                             child: Container(
-                              child : Image.memory(
+                            padding: const EdgeInsets.only(bottom: 15),
+                            child: Stack(children: <Widget>[
+                              Center(
+                                child: Container(
+                                    child: Image.memory(
                                   imageUser!,
                                   width: 275,
                                   height: 275,
                                 )),
-                           ),
-                            Positioned(
-                              right: 45,
-                            top: 30,
-                            child: InkWell(child: Icon(Icons.remove_circle, size: 30, color: Colors.red),
-                            onTap: () {
-                              setState( () { imageUser = null; },);
-                            },),
+                              ),
+                              Positioned(
+                                right: 45,
+                                top: 30,
+                                child: InkWell(
+                                  child: Icon(Icons.remove_circle,
+                                      size: 30, color: Colors.red),
+                                  onTap: () {
+                                    setState(
+                                      () {
+                                        imageUser = null;
+                                      },
+                                    );
+                                  },
+                                ),
+                              )
+                            ]),
                           )
-                          ]),
-                        ): Text(''),
+                        : Text(''),
                     Row(
                       children: [
                         GestureDetector(
@@ -303,130 +308,139 @@ class _NewTaskPageState extends State<NewTaskPage> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(
-                            left: 25,
-                            top: 25,
-                          ),
-                          child: GestureDetector(
-                            onLongPressUp: () {
-                              setState(() => _date = ' ');
-                              setState(() => _time = '- ');
-                            },
-                          child: ActionChip(
-                              backgroundColor: myColor.computeLuminance() > 0.5
-                                  ? Colors.black12
-                                  : Colors.white,
-                              label: Text("Échéance : ${_date}  ${_time}"),
-                              onPressed: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title:
-                                            Text('Sélectionner une échéance'),
-                                        actions: <Widget>[
-                                          ElevatedButton(
-                                            child: Icon(Icons.calendar_month),
-                                            onPressed: () async {
-                                              DateTime? newDate =
-                                                  await showDatePicker(
-                                                context: context,
-                                                locale:
-                                                    const Locale("fr", "FR"),
-                                                initialDate: DateTime.now(),
-                                                firstDate: DateTime(2022),
-                                                lastDate: DateTime(2100),
-                                                builder: (context, child) {
-                                                  return Theme(
-                                                    data: Theme.of(context)
-                                                        .copyWith(
-                                                      colorScheme:
-                                                          ColorScheme.light(
-                                                        primary: primaryColor,
-                                                        // <-- SEE HERE
-                                                        onPrimary: Colors.white,
-                                                        // <-- SEE HERE
-                                                        onSurface: Colors
-                                                            .black, // <-- SEE HERE
-                                                      ),
-                                                      textButtonTheme:
-                                                          TextButtonThemeData(
-                                                        style: TextButton
-                                                            .styleFrom(
-                                                          primary: Colors
-                                                              .black, // button text color
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    child: child!,
-                                                  );
-                                                },
-                                              );
-                                              if (newDate == null) return;
-                                              setState(() => date = newDate);
-                                              _date =
-                                                  "${newDate.day.toString().padLeft(2, '0')}-${newDate.month.toString().padLeft(2, '0')}-${newDate.year.toString()}";
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                                primary: primaryColor),
-                                          ),
-                                          ElevatedButton(
-                                            child: Icon(Icons.more_time),
-                                            onPressed: () async {
-                                              TimeOfDay? newTime =
-                                                  await showTimePicker(
-                                                context: context,
-                                                initialTime: TimeOfDay.now(),
-                                                builder: (context, child) {
-                                                  return Theme(
-                                                    data: Theme.of(context)
-                                                        .copyWith(
-                                                      colorScheme:
-                                                          ColorScheme.light(
-                                                        primary: primaryColor,
-                                                        // <-- SEE HERE
-                                                        onPrimary: Colors.white,
-                                                        // <-- SEE HERE
-                                                        onSurface: Colors
-                                                            .black, // <-- SEE HERE
-                                                      ),
-                                                      textButtonTheme:
-                                                          TextButtonThemeData(
-                                                        style: TextButton
-                                                            .styleFrom(
-                                                          primary: Colors
-                                                              .black, // button text color
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    child: child!,
-                                                  );
-                                                },
-                                              );
-                                              if (newTime == null) return;
-
-                                              setState(() => time = newTime);
-                                              _time =
-                                                  "${newTime.hour.toString().padLeft(2,'0')}:${newTime.minute.toString().padLeft(2,'0')}";
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                                primary: primaryColor),
-                                          ),
-                                          SizedBox(
-                                            width: 20,
-                                          ),
-                                        ],
-                                      );
-                                    });
-                              }),
-                          )),
-                        Padding(
                             padding: const EdgeInsets.only(
                               left: 25,
                               top: 25,
                             ),
-                         //TODO add tags here
-                          )
+                            child: GestureDetector(
+                              onLongPressUp: () {
+                                setState(() => _date = ' ');
+                                setState(() => _time = '- ');
+                              },
+                              child: ActionChip(
+                                  backgroundColor:
+                                      myColor.computeLuminance() > 0.5
+                                          ? Colors.black12
+                                          : Colors.white,
+                                  label: Text("Échéance : ${_date}  ${_time}"),
+                                  onPressed: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text(
+                                                'Sélectionner une échéance'),
+                                            actions: <Widget>[
+                                              ElevatedButton(
+                                                child:
+                                                    Icon(Icons.calendar_month),
+                                                onPressed: () async {
+                                                  DateTime? newDate =
+                                                      await showDatePicker(
+                                                    context: context,
+                                                    locale: const Locale(
+                                                        "fr", "FR"),
+                                                    initialDate: DateTime.now(),
+                                                    firstDate: DateTime(2022),
+                                                    lastDate: DateTime(2100),
+                                                    builder: (context, child) {
+                                                      return Theme(
+                                                        data: Theme.of(context)
+                                                            .copyWith(
+                                                          colorScheme:
+                                                              ColorScheme.light(
+                                                            primary:
+                                                                primaryColor,
+                                                            // <-- SEE HERE
+                                                            onPrimary:
+                                                                Colors.white,
+                                                            // <-- SEE HERE
+                                                            onSurface: Colors
+                                                                .black, // <-- SEE HERE
+                                                          ),
+                                                          textButtonTheme:
+                                                              TextButtonThemeData(
+                                                            style: TextButton
+                                                                .styleFrom(
+                                                              primary: Colors
+                                                                  .black, // button text color
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        child: child!,
+                                                      );
+                                                    },
+                                                  );
+                                                  if (newDate == null) return;
+                                                  setState(
+                                                      () => date = newDate);
+                                                  _date =
+                                                      "${newDate.day.toString().padLeft(2, '0')}-${newDate.month.toString().padLeft(2, '0')}-${newDate.year.toString()}";
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                    primary: primaryColor),
+                                              ),
+                                              ElevatedButton(
+                                                child: Icon(Icons.more_time),
+                                                onPressed: () async {
+                                                  TimeOfDay? newTime =
+                                                      await showTimePicker(
+                                                    context: context,
+                                                    initialTime:
+                                                        TimeOfDay.now(),
+                                                    builder: (context, child) {
+                                                      return Theme(
+                                                        data: Theme.of(context)
+                                                            .copyWith(
+                                                          colorScheme:
+                                                              ColorScheme.light(
+                                                            primary:
+                                                                primaryColor,
+                                                            // <-- SEE HERE
+                                                            onPrimary:
+                                                                Colors.white,
+                                                            // <-- SEE HERE
+                                                            onSurface: Colors
+                                                                .black, // <-- SEE HERE
+                                                          ),
+                                                          textButtonTheme:
+                                                              TextButtonThemeData(
+                                                            style: TextButton
+                                                                .styleFrom(
+                                                              primary: Colors
+                                                                  .black, // button text color
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        child: child!,
+                                                      );
+                                                    },
+                                                  );
+                                                  if (newTime == null) return;
+
+                                                  setState(
+                                                      () => time = newTime);
+                                                  _time =
+                                                      "${newTime.hour.toString().padLeft(2, '0')}:${newTime.minute.toString().padLeft(2, '0')}";
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                    primary: primaryColor),
+                                              ),
+                                              SizedBox(
+                                                width: 20,
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  }),
+                            )),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: 25,
+                            top: 25,
+                          ),
+                          //TODO add tags here
+                        )
                       ],
                     )
                   ],
@@ -452,9 +466,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
               createTask(task);
               if (date != null) {
                 creerNotificationFinEcheance(
-                    NotificationDateAndTime(
-                        date: date!,
-                        timeOfDay: time!));
+                    NotificationDateAndTime(date: date!, timeOfDay: time!));
               }
               //revenir en arrière
               Navigator.pop(context);
@@ -558,4 +570,32 @@ class _NewTaskPageState extends State<NewTaskPage> {
  *  ImagePicker feature + Méthode PickImage();
  *  CreateButton
  *  + changement visuelle/graphique de la page
+ *  Méthode date time picker
+ */
+
+/*
+ * Author : Artur
+ * création de la structure de la page
+ * configuration pour l'envoi des données vers firebase
+ */
+
+/*
+ * Author : Artur et Nicolas
+ * conversion de la couleur pour envoi sur firebase
+ * rendre l'étape et la case à cocher dynamique
+ * fonction de création d'une tâche
+ */
+
+/*
+ * Author : Manuel
+ * Nouveau wraps pour un meilleure affichage
+ * Échéance (chip)
+ * - Delete on longPress
+ * Restructuration de la partie ajout de tâches
+ * Couleur du texte qui change en fonction du colorPicker
+ */
+
+/*
+ * Author : Manuel et Nicolas
+ * suppression de l'image
  */

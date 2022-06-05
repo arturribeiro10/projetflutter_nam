@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:projetflutter_nam/imagemanager.dart';
 
 class TaskCardWidget extends StatelessWidget {
   final id;
@@ -13,7 +11,14 @@ class TaskCardWidget extends StatelessWidget {
   late final time;
   late final image;
 
-  TaskCardWidget({required this.title, required this.desc, required this.color, this.id, this.date, this.time, this.image});
+  TaskCardWidget(
+      {required this.title,
+      required this.desc,
+      required this.color,
+      this.id,
+      this.date,
+      this.time,
+      this.image});
 
   @override
   Widget build(BuildContext context) {
@@ -26,28 +31,27 @@ class TaskCardWidget extends StatelessWidget {
       margin: const EdgeInsets.only(
         bottom: 20.0,
       ),
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 4,
-            offset: Offset(0, 3),
-          )
-        ],
-          color: color,
-          borderRadius: BorderRadius.circular(20.0)
-      ),
+      decoration: BoxDecoration(boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.5),
+          spreadRadius: 2,
+          blurRadius: 4,
+          offset: Offset(0, 3),
+        )
+      ], color: color, borderRadius: BorderRadius.circular(20.0)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.only(bottom: 30),
             child: Center(
-              child: image != null ?
-              Image.memory(base64Decode(image),
-              width: 200,
-              height: 200,) : null,
+              child: image != null
+                  ? Image.memory(
+                      base64Decode(image),
+                      width: 200,
+                      height: 200,
+                    )
+                  : null,
             ),
           ),
           Text(
@@ -72,13 +76,15 @@ class TaskCardWidget extends StatelessWidget {
             ),
           ),
           Padding(
-              padding: const EdgeInsets.only(
-                top: 10.0,
-              ),
-                child: Chip(
-                  label: date.isNotEmpty && date != ' '  ? Text("Échéance : ${date}  ${time}") : Text("Pas d'échéance"),
-                ),
-              )
+            padding: const EdgeInsets.only(
+              top: 10.0,
+            ),
+            child: Chip(
+              label: date.isNotEmpty && date != ' '
+                  ? Text("Échéance : ${date}  ${time}")
+                  : Text("Pas d'échéance"),
+            ),
+          )
         ],
       ),
     );
@@ -91,7 +97,6 @@ class ToDoWidget extends StatelessWidget {
 
   Function onChange;
 
-
   ToDoWidget({this.text, required this.isDone, required this.onChange});
 
   @override
@@ -103,36 +108,36 @@ class ToDoWidget extends StatelessWidget {
       ),
       child: Row(
         children: [
-         GestureDetector(
-           child: Container(
-             width: 20.0,
-             height: 20.0,
-             margin: const EdgeInsets.only(
-               right: 12.0,
-             ),
-             child: Icon(
-               isDone ? Icons.check_box : Icons.check_box_outline_blank,
-               color: Colors.blueGrey,
-               size: 24.0,
-             ),
-
-           ),
-           onTap: () => onChange(),
-         ),
+          GestureDetector(
+            child: Container(
+              width: 20.0,
+              height: 20.0,
+              margin: const EdgeInsets.only(
+                right: 12.0,
+              ),
+              child: Icon(
+                isDone ? Icons.check_box : Icons.check_box_outline_blank,
+                color: Colors.blueGrey,
+                size: 24.0,
+              ),
+            ),
+            onTap: () => onChange(),
+          ),
           Text(
             //text ?? "Entrer un élément à effectuer",
             text,
-          style: const TextStyle(
-            //color: Colors.blueGrey,
-            fontSize: 16.0,
-            fontWeight: FontWeight.bold,
-          ),
+            style: const TextStyle(
+              //color: Colors.blueGrey,
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
       ),
     );
   }
 }
+
 class NoGlowScroll extends ScrollBehavior {
   @override
   Widget buildViewportChrome(
@@ -141,7 +146,16 @@ class NoGlowScroll extends ScrollBehavior {
   }
 }
 
-
 /*
-* Author(s) : Artur Ribeiro
+* Author : Artur
+* création de la structure des deux widgets
+*/
+/*
+* Author : Nicolas
+* ajout des composants nécessaires pour image, date et heure
+*/
+/*
+* Author : Manuel
+* ajout de l'image dans la taskcard
+* ajout de l'échéance dans la taskcard
 */

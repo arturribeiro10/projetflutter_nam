@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 class CustomSearchDelegate extends SearchDelegate {
   List<String> searchTerms = [
@@ -72,3 +71,7 @@ class CustomSearchDelegate extends SearchDelegate {
     );
   }
 }
+
+/*
+ * Author : Nicolas
+ */

@@ -11,7 +11,6 @@ import 'package:projetflutter_nam/utilities.dart';
 import 'package:projetflutter_nam/widgets.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 import '../imagemanager.dart';
 import 'homepage.dart';
 
@@ -47,11 +46,12 @@ class _TaskpageState extends State<Taskpage> {
   final primaryColor = Colors.orange;
   final secondaryColor = Colors.orange.shade100;
 
-
   //attribut colorPicker
   late Color myColor;
+
   //attribut imagepicker
   Uint8List? imageUser;
+
   //attributs Date & Time Picker
   DateTime? date;
   TimeOfDay? time;
@@ -128,26 +128,34 @@ class _TaskpageState extends State<Taskpage> {
                   children: [
                     imageUser != null
                         ? Padding(
-                          padding: const EdgeInsets.only(bottom: 15),
-                          child: Stack( children: <Widget>[
-                      Center(
-                          child: Container(
-                              child : Image.memory(
-                                imageUser!,
-                                width: 275,
-                                height: 275,
-                              )),
-                      ),
-                      Positioned(
-                          right: 45,
-                          top: 30,
-                          child: InkWell(child: Icon(Icons.remove_circle, size: 30, color: Colors.red),
-                            onTap: () {
-                              setState( () { imageUser = null; },);
-                            },),
-                      )
-                    ]),
-                        ): Text(''),
+                            padding: const EdgeInsets.only(bottom: 15),
+                            child: Stack(children: <Widget>[
+                              Center(
+                                child: Container(
+                                    child: Image.memory(
+                                  imageUser!,
+                                  width: 275,
+                                  height: 275,
+                                )),
+                              ),
+                              Positioned(
+                                right: 45,
+                                top: 30,
+                                child: InkWell(
+                                  child: Icon(Icons.remove_circle,
+                                      size: 30, color: Colors.red),
+                                  onTap: () {
+                                    setState(
+                                      () {
+                                        imageUser = null;
+                                      },
+                                    );
+                                  },
+                                ),
+                              )
+                            ]),
+                          )
+                        : Text(''),
                     Row(
                       children: [
                         GestureDetector(
@@ -180,9 +188,9 @@ class _TaskpageState extends State<Taskpage> {
                               labelText: "Titre de la tâche",
                               hintText: "Entrer le titre de la tâche...",
                               hintStyle: TextStyle(
-                                color : myColor.computeLuminance() > 0.5
-                                    ? Colors.black
-                                    : Colors.white,
+                                  color: myColor.computeLuminance() > 0.5
+                                      ? Colors.black
+                                      : Colors.white,
                                   fontSize: 18.0),
                               labelStyle: TextStyle(
                                   color: myColor.computeLuminance() > 0.5
@@ -232,10 +240,11 @@ class _TaskpageState extends State<Taskpage> {
                         decoration: InputDecoration(
                           labelText: "Description",
                           hintText: "Entrer la description de la tâche...",
-                          labelStyle:
-                              TextStyle(color: myColor.computeLuminance() > 0.5
+                          labelStyle: TextStyle(
+                              color: myColor.computeLuminance() > 0.5
                                   ? Colors.black
-                                  : Colors.white, fontSize: 18.0),
+                                  : Colors.white,
+                              fontSize: 18.0),
                           enabledBorder: OutlineInputBorder(
                             borderSide: const BorderSide(
                                 color: Colors.transparent, width: 2.0),
@@ -278,14 +287,14 @@ class _TaskpageState extends State<Taskpage> {
                             decoration: InputDecoration(
                                 hintText: "Entrer une étape...",
                                 hintStyle: TextStyle(
-                                  color: myColor.computeLuminance() > 0.5
-                                      ? Colors.black
-                                      : Colors.white
-                                ),
+                                    color: myColor.computeLuminance() > 0.5
+                                        ? Colors.black
+                                        : Colors.white),
                                 focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: myColor.computeLuminance() > 0.5
-                                      ? Colors.black
-                                      : Colors.white),
+                                  borderSide: BorderSide(
+                                      color: myColor.computeLuminance() > 0.5
+                                          ? Colors.black
+                                          : Colors.white),
                                 ),
                                 suffixIcon: IconButton(
                                   // Icon to
@@ -319,38 +328,53 @@ class _TaskpageState extends State<Taskpage> {
                               setState(() => _time = '- ');
                             },
                             child: ActionChip(
-                              backgroundColor: myColor.computeLuminance() > 0.5
-                                  ? Colors.black12
-                                  : Colors.white,
-                                label: _date.isEmpty ? Text("Échéance :  ${widget.date} ${widget.time}") : Text("Échéance :  ${_date} ${_time}"),
+                                backgroundColor:
+                                    myColor.computeLuminance() > 0.5
+                                        ? Colors.black12
+                                        : Colors.white,
+                                label: _date.isEmpty
+                                    ? Text(
+                                        "Échéance :  ${widget.date} ${widget.time}")
+                                    : Text("Échéance :  ${_date} ${_time}"),
                                 onPressed: () {
                                   showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
                                         return AlertDialog(
-                                          title: Text('Sélectionner une échéance'),
+                                          title:
+                                              Text('Sélectionner une échéance'),
                                           actions: <Widget>[
                                             ElevatedButton(
                                               child: Icon(Icons.calendar_month),
                                               onPressed: () async {
                                                 DateTime? newDate =
-                                                await showDatePicker(
+                                                    await showDatePicker(
                                                   context: context,
-                                                  locale: const Locale("fr", "FR"),
+                                                  locale:
+                                                      const Locale("fr", "FR"),
                                                   initialDate: DateTime.now(),
                                                   firstDate: DateTime(2022),
                                                   lastDate: DateTime(2100),
                                                   builder: (context, child) {
                                                     return Theme(
-                                                      data: Theme.of(context).copyWith(
-                                                        colorScheme: ColorScheme.light(
-                                                          primary: primaryColor, // <-- SEE HERE
-                                                          onPrimary: Colors.white, // <-- SEE HERE
-                                                          onSurface: Colors.black, // <-- SEE HERE
+                                                      data: Theme.of(context)
+                                                          .copyWith(
+                                                        colorScheme:
+                                                            ColorScheme.light(
+                                                          primary: primaryColor,
+                                                          // <-- SEE HERE
+                                                          onPrimary:
+                                                              Colors.white,
+                                                          // <-- SEE HERE
+                                                          onSurface: Colors
+                                                              .black, // <-- SEE HERE
                                                         ),
-                                                        textButtonTheme: TextButtonThemeData(
-                                                          style: TextButton.styleFrom(
-                                                            primary: Colors.black, // button text color
+                                                        textButtonTheme:
+                                                            TextButtonThemeData(
+                                                          style: TextButton
+                                                              .styleFrom(
+                                                            primary: Colors
+                                                                .black, // button text color
                                                           ),
                                                         ),
                                                       ),
@@ -361,30 +385,38 @@ class _TaskpageState extends State<Taskpage> {
                                                 if (newDate == null) return;
                                                 setState(() => date = newDate);
                                                 _date =
-                                                "${newDate.day.toString().padLeft(2, '0')}-${newDate.month.toString().padLeft(2, '0')}-${newDate.year.toString()}";
+                                                    "${newDate.day.toString().padLeft(2, '0')}-${newDate.month.toString().padLeft(2, '0')}-${newDate.year.toString()}";
                                               },
                                               style: ElevatedButton.styleFrom(
-                                                  primary: primaryColor
-                                              ),
+                                                  primary: primaryColor),
                                             ),
                                             ElevatedButton(
                                               child: Icon(Icons.more_time),
                                               onPressed: () async {
                                                 TimeOfDay? newTime =
-                                                await showTimePicker(
+                                                    await showTimePicker(
                                                   context: context,
                                                   initialTime: TimeOfDay.now(),
                                                   builder: (context, child) {
                                                     return Theme(
-                                                      data: Theme.of(context).copyWith(
-                                                        colorScheme: ColorScheme.light(
-                                                          primary: primaryColor, // <-- SEE HERE
-                                                          onPrimary: Colors.white, // <-- SEE HERE
-                                                          onSurface: Colors.black, // <-- SEE HERE
+                                                      data: Theme.of(context)
+                                                          .copyWith(
+                                                        colorScheme:
+                                                            ColorScheme.light(
+                                                          primary: primaryColor,
+                                                          // <-- SEE HERE
+                                                          onPrimary:
+                                                              Colors.white,
+                                                          // <-- SEE HERE
+                                                          onSurface: Colors
+                                                              .black, // <-- SEE HERE
                                                         ),
-                                                        textButtonTheme: TextButtonThemeData(
-                                                          style: TextButton.styleFrom(
-                                                            primary: Colors.black, // button text color
+                                                        textButtonTheme:
+                                                            TextButtonThemeData(
+                                                          style: TextButton
+                                                              .styleFrom(
+                                                            primary: Colors
+                                                                .black, // button text color
                                                           ),
                                                         ),
                                                       ),
@@ -396,11 +428,10 @@ class _TaskpageState extends State<Taskpage> {
 
                                                 setState(() => time = newTime);
                                                 _time =
-                                                "${newTime.hour.toString().padLeft(2,'0')}:${newTime.minute.toString().padLeft(2,'0')}";
+                                                    "${newTime.hour.toString().padLeft(2, '0')}:${newTime.minute.toString().padLeft(2, '0')}";
                                               },
                                               style: ElevatedButton.styleFrom(
-                                                  primary: primaryColor
-                                              ),
+                                                  primary: primaryColor),
                                             ),
                                             SizedBox(
                                               width: 20,
@@ -410,7 +441,7 @@ class _TaskpageState extends State<Taskpage> {
                                       });
                                 }),
                           ),
-                          ),
+                        ),
                       ],
                     )
                   ],
@@ -421,7 +452,7 @@ class _TaskpageState extends State<Taskpage> {
         ),
         floatingActionButton: FloatingActionButton(
             elevation: 4.0,
-            child : const Icon(Icons.update),
+            child: const Icon(Icons.update),
             backgroundColor: primaryColor,
             onPressed: () {
               final docTask = FirebaseFirestore.instance
@@ -438,9 +469,7 @@ class _TaskpageState extends State<Taskpage> {
               });
               if (date != null) {
                 creerNotificationFinEcheance(
-                    NotificationDateAndTime(
-                        date: date!,
-                        timeOfDay: time!));
+                    NotificationDateAndTime(date: date!, timeOfDay: time!));
               }
               //revenir en arrière
               Navigator.pop(context);
@@ -501,7 +530,7 @@ class _TaskpageState extends State<Taskpage> {
                                 pickImage(ImageSource.gallery);
                               },
                               style: ElevatedButton.styleFrom(
-                                primary: primaryColor)),
+                                  primary: primaryColor)),
                           ElevatedButton(
                               child: Icon(Icons.camera_alt),
                               onPressed: () {
@@ -538,7 +567,6 @@ class _TaskpageState extends State<Taskpage> {
         ));
   }
 
-
   void clearText() {
     controllerEtape.clear();
   }
@@ -551,4 +579,35 @@ class _TaskpageState extends State<Taskpage> {
  *  ImagePicker feature + Méthode PickImage();
  *  CreateButton
  *  + changement visuelle/graphique de la page
+ *  DateTime Picker
+ */
+
+/*
+ * Author : Artur
+ * création de la structure de la page
+ * récupération des données firebase
+ * envoi des données vers firebase
+ */
+
+/*
+ * Author : Artur et Nicolas
+ * conversion de la couleur pour envoi sur firebase
+ * Fonction de mise à jour des donées sur firebase
+ * appel des étapes avec case à cocher depuis firebase
+ * rendre l'étape et la case à cocher dynamique
+ * fonction de suppression d'une tâche
+ */
+
+/*
+ * Author : Manuel
+ * Nouveau wraps pour un meilleure affichage
+ * Échéance (chip) / save Firebase
+ * - Delete on longPress
+ * Restructuration de la partie ajout de tâches
+ * Couleur du texte qui change en fonction du colorPicker
+ */
+
+/*
+ * Author : Manuel et Nicolas
+ * suppression de l'image
  */
