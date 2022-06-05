@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:projetflutter_nam/widgets.dart';
 
 class TaskCardWidget extends StatelessWidget {
   final id;
@@ -57,7 +58,7 @@ class TaskCardWidget extends StatelessWidget {
           Text(
             title ?? "(unnamed task)",
             style: const TextStyle(
-              color: Colors.blueGrey,
+              color: Colors.black,
               fontSize: 22.0,
               fontWeight: FontWeight.bold,
             ),
@@ -70,19 +71,21 @@ class TaskCardWidget extends StatelessWidget {
               desc ?? "no description added",
               style: const TextStyle(
                 fontSize: 16.0,
-                color: Colors.blueGrey,
+                color: Colors.black,
                 height: 1.5,
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 10.0,
-            ),
-            child: Chip(
-              label: date.isNotEmpty && date != ' '
-                  ? Text("Échéance : ${date}  ${time}")
-                  : Text("Pas d'échéance"),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                top: 10.0,
+              ),
+              child: Chip(
+                label: date.isNotEmpty && date != ' '
+                    ? Text("Échéance : ${date}  ${time}")
+                    : Text("Pas d'échéance"),
+              ),
             ),
           )
         ],
@@ -139,8 +142,9 @@ class ToDoWidget extends StatelessWidget {
 }
 
 class TagWidget extends StatelessWidget {
-  const TagWidget({this.text});
   final text;
+
+  TagWidget({this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -149,9 +153,8 @@ class TagWidget extends StatelessWidget {
       // espace entre widget
       child: Chip(
         label: Text(
-          text,
+          "#" + text,
           style: const TextStyle(
-            //color: Colors.blueGrey,
             fontSize: 16.0,
             fontWeight: FontWeight.bold,
           ),
@@ -174,3 +177,8 @@ class TagWidget extends StatelessWidget {
 * ajout de l'image dans la taskcard
 * ajout de l'échéance dans la taskcard
 */
+
+/*
+ * Authors : Manuel, Nicolas, Artur
+ * Tags widget
+ */

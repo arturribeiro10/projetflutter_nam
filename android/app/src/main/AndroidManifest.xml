@@ -1,9 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.projetflutter_nam">
    <application
-        android:label="projetflutter_nam"
+        android:label="Task Manager"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launch_screen1">
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -132,7 +132,8 @@ class _HomepageState extends State<Homepage> {
                                       date: document.get('date'),
                                       time: document.get('time'),
                                       image: document.get('image'),
-                                      todolist: document.get('todolist')),
+                                      todolist: document.get('todolist'),
+                                      tags: document.get('tags')),
                                 ));
                           },
                           child: TaskCardWidget(

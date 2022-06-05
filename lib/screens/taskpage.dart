@@ -24,7 +24,8 @@ class Taskpage extends StatefulWidget {
       this.date,
       this.time,
       this.image,
-      this.todolist})
+      this.todolist,
+      this.tags})
       : super(key: key);
   final id;
   late final title;
@@ -34,15 +35,13 @@ class Taskpage extends StatefulWidget {
   final time;
   final image;
   final List<dynamic>? todolist;
+  final List<dynamic>? tags;
 
   @override
   State<Taskpage> createState() => _TaskpageState();
 }
 
 class _TaskpageState extends State<Taskpage> {
-  final Stream<QuerySnapshot> _tasksStream =
-      FirebaseFirestore.instance.collection('todo').snapshots();
-
   final primaryColor = Colors.orange;
   final secondaryColor = Colors.orange.shade100;
 
@@ -58,10 +57,10 @@ class _TaskpageState extends State<Taskpage> {
   String _date = "";
   String _time = "";
 
-  //String? valueString;
-
   List<dynamic> todolist = [];
+  List<dynamic> tags = [];
 
+  final controllerTag = TextEditingController();
 
   final controllerTitle = TextEditingController();
   final controllerDescription = TextEditingController();
@@ -84,6 +83,7 @@ class _TaskpageState extends State<Taskpage> {
     }
 
     todolist = widget.todolist ?? [];
+    tags = widget.tags ?? [];
     controllerTitle.text = widget.title;
     controllerDescription.text = widget.desc;
     myColor = widget.color;
@@ -241,6 +241,10 @@ class _TaskpageState extends State<Taskpage> {
                         decoration: InputDecoration(
                           labelText: "Description",
                           hintText: "Entrer la description de la tâche...",
+                          hintStyle: TextStyle(
+                              color: myColor.computeLuminance() > 0.5
+                                  ? Colors.black
+                                  : Colors.white),
                           labelStyle: TextStyle(
                               color: myColor.computeLuminance() > 0.5
                                   ? Colors.black
@@ -258,6 +262,10 @@ class _TaskpageState extends State<Taskpage> {
                           ),
                         ),
                         controller: controllerDescription,
+                        style: TextStyle(
+                            color: myColor.computeLuminance() > 0.5
+                                ? Colors.black
+                                : Colors.white),
                       ),
                     ),
                     Column(
@@ -284,9 +292,67 @@ class _TaskpageState extends State<Taskpage> {
                             left: 25,
                           ),
                           child: TextField(
-                            autofocus: false,
+                              autofocus: false,
+                              decoration: InputDecoration(
+                                  hintText: "Entrer une étape...",
+                                  hintStyle: TextStyle(
+                                      color: myColor.computeLuminance() > 0.5
+                                          ? Colors.black
+                                          : Colors.white),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: myColor.computeLuminance() > 0.5
+                                            ? Colors.black
+                                            : Colors.white),
+                                  ),
+                                  suffixIcon: IconButton(
+                                    // Icon to
+                                    icon: Icon(Icons.clear), // clear text
+                                    onPressed: clearTextEtape,
+                                    color: myColor.computeLuminance() > 0.5
+                                        ? Colors.black
+                                        : Colors.white,
+                                  )),
+                              controller: controllerEtape,
+                              onSubmitted: (String text) {
+                                print("etape $text");
+                                if (text.isEmpty) {
+                                  return;
+                                }
+                                setState(() {
+                                  todolist
+                                      .add({"etape": text, "isdone": false});
+                                });
+                                clearTextEtape();
+                              },
+                              style: TextStyle(
+                                color: myColor.computeLuminance() > 0.5
+                                    ? Colors.black
+                                    : Colors.white,
+                              )),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                        ),
+                        tags != null
+                            ? Row(
+                                children: tags.map((data) {
+                                  return TagWidget(
+                                    text: data['tag'],
+                                  );
+                                }).toList(),
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                              )
+                            : Container(),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            top: 10,
+                            left: 25,
+                          ),
+                          child: TextField(
                             decoration: InputDecoration(
-                                hintText: "Entrer une étape...",
+                                hintText: "Ajouter un tag...",
                                 hintStyle: TextStyle(
                                     color: myColor.computeLuminance() > 0.5
                                         ? Colors.black
@@ -300,21 +366,21 @@ class _TaskpageState extends State<Taskpage> {
                                 suffixIcon: IconButton(
                                   // Icon to
                                   icon: Icon(Icons.clear), // clear text
-                                  onPressed: clearText,
+                                  onPressed: clearTextTag,
                                   color: myColor.computeLuminance() > 0.5
                                       ? Colors.black
                                       : Colors.white,
                                 )),
-                            controller: controllerEtape,
+                            controller: controllerTag,
                             onSubmitted: (String text) {
-                              print("etape $text");
+                              print("tag $text");
                               if (text.isEmpty) {
                                 return;
                               }
                               setState(() {
-                                todolist.add({"etape": text, "isdone": false});
+                                tags.add({"tag": text});
                               });
-                              clearText();
+                              clearTextTag();
                             },
                           ),
                         ),
@@ -337,6 +403,7 @@ class _TaskpageState extends State<Taskpage> {
                                     ? Text(
                                         "Échéance :  ${widget.date} ${widget.time}")
                                     : Text("Échéance :  ${_date} ${_time}"),
+                                labelStyle: TextStyle(fontSize: 16.0),
                                 onPressed: () {
                                   showDialog(
                                       context: context,
@@ -467,6 +534,7 @@ class _TaskpageState extends State<Taskpage> {
                 'date': _date,
                 'time': _time,
                 'todolist': todolist,
+                'tags': tags,
               });
               if (date != null) {
                 creerNotificationFinEcheance(
@@ -568,8 +636,12 @@ class _TaskpageState extends State<Taskpage> {
         ));
   }
 
-  void clearText() {
+  void clearTextEtape() {
     controllerEtape.clear();
+  }
+
+  void clearTextTag() {
+    controllerTag.clear();
   }
 }
 
@@ -611,4 +683,9 @@ class _TaskpageState extends State<Taskpage> {
 /*
  * Author : Manuel et Nicolas
  * suppression de l'image
+ */
+
+/*
+ * Authors : Manuel, Nicolas, Artur
+ * Tags feature
  */

@@ -75,10 +75,9 @@ class _NewTaskPageState extends State<NewTaskPage> {
 
   List<dynamic>? todolist;
 
-  //List<dynamic>? tags;
-  List<dynamic> tags = [];
-  final controllerTag = TextEditingController();
+  List<dynamic>? tags;
 
+  final controllerTag = TextEditingController();
   final controllerEtape = TextEditingController();
 
   void initState() {
@@ -90,7 +89,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
     print("Heure de la tâche: ${widget.time}");
 
     todolist = widget.todolist ?? [];
-    //tags = widget.tags ?? [];
+    tags = widget.tags ?? [];
 
     myColor = widget.color;
 
@@ -307,51 +306,65 @@ class _NewTaskPageState extends State<NewTaskPage> {
                               });
                               clearTextEtape();
                             },
+                            style: TextStyle(
+                              color: myColor.computeLuminance() > 0.5
+                                  ? Colors.black
+                                  : Colors.white,
+                            ),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(0.0),
+                          padding: const EdgeInsets.only(top: 30),
                         ),
                         tags != null
                             ? Row(
-                          children: tags!.map((data) {
-                            return GestureDetector(
-                              child: TagWidget(
-                                text: data['tags'],
-                                ),
-                                onLongPressUp: () {
-                                  setState(() => tags);
-                                },
-                            );
-                          }).toList(),
-                        )
+                                children: tags!.map((data) {
+                                  return TagWidget(
+                                    text: data['tag'],
+                                  );
+                                }).toList(),
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.max,
+                              )
                             : Container(),
                         Padding(
                           padding: const EdgeInsets.only(
+                            top: 10,
                             left: 25,
                           ),
                           child: TextField(
                             decoration: InputDecoration(
-                                hintText: "Ajouter un tag",
+                                hintText: "Ajouter un tag...",
+                                hintStyle: TextStyle(
+                                    color: myColor.computeLuminance() > 0.5
+                                        ? Colors.black
+                                        : Colors.white),
                                 focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey),
+                                  borderSide: BorderSide(
+                                      color: myColor.computeLuminance() > 0.5
+                                          ? Colors.black
+                                          : Colors.white),
                                 ),
                                 suffixIcon: IconButton(
                                   // Icon to
                                   icon: Icon(Icons.clear), // clear text
                                   onPressed: clearTextTag,
+                                  color: myColor.computeLuminance() > 0.5
+                                      ? Colors.black
+                                      : Colors.white,
                                 )),
                             controller: controllerTag,
                             onSubmitted: (String text) {
-                              print("tags $text");
-                              if (text.isEmpty) {
-                                return;
-                              }
                               setState(() {
-                                tags.add({"tags": text});
+                                tags?.add({"tag": text});
                               });
                               clearTextTag();
                             },
+                            style: TextStyle(
+                              color: myColor.computeLuminance() > 0.5
+                                  ? Colors.black
+                                  : Colors.white,
+                            ),
                           ),
                         ),
                         Padding(
@@ -370,6 +383,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                                           ? Colors.black12
                                           : Colors.white,
                                   label: Text("Échéance : ${_date}  ${_time}"),
+                                  labelStyle: TextStyle(fontSize: 16.0),
                                   onPressed: () {
                                     showDialog(
                                         context: context,
@@ -609,7 +623,8 @@ class _NewTaskPageState extends State<NewTaskPage> {
   void clearTextEtape() {
     controllerEtape.clear();
   }
-  void clearTextTag(){
+
+  void clearTextTag() {
     controllerTag.clear();
   }
 }
@@ -649,4 +664,9 @@ class _NewTaskPageState extends State<NewTaskPage> {
 /*
  * Author : Manuel et Nicolas
  * suppression de l'image
+ */
+
+/*
+ * Authors : Manuel, Nicolas, Artur
+ * Tags feature
  */
