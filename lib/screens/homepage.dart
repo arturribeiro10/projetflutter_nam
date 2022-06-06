@@ -95,66 +95,64 @@ class _HomepageState extends State<Homepage> {
             vertical: 0.0,
           ),
           color: secondaryColor,
-          child: Expanded(
-            child: ListView(children: [
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: StreamBuilder<QuerySnapshot>(
-                  stream: _tasksStream,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.hasError) {
-                      return const Text('Something went wrong');
-                    }
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Text("Loading");
-                    }
+          child: ListView(children: [
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: StreamBuilder<QuerySnapshot>(
+                stream: _tasksStream,
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    return const Text('Something went wrong');
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Text("Loading");
+                  }
 
-                    return ListView(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      children:
-                          snapshot.data!.docs.map((DocumentSnapshot document) {
-                        Map<String, dynamic> data =
-                            document.data()! as Map<String, dynamic>;
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => Taskpage(
-                                      id: document.id,
-                                      title: document.get('title'),
-                                      desc: document.get('desc'),
-                                      color: data['color'] != null
-                                          ? Color(data['color'])
-                                          : Colors.white,
-                                      date: document.get('date'),
-                                      time: document.get('time'),
-                                      image: document.get('image'),
-                                      todolist: document.get('todolist'),
-                                      tags: document.get('tags')),
-                                ));
-                          },
-                          child: TaskCardWidget(
-                            id: data['id'],
-                            title: data['title'],
-                            desc: data['desc'],
-                            color: data['color'] != null
-                                ? Color(data['color'])
-                                : Colors.white,
-                            date: data['date'],
-                            time: data['time'],
-                            image: data['image'],
-                          ),
-                        );
-                      }).toList(),
-                    );
-                  },
-                ),
+                  return ListView(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    children:
+                        snapshot.data!.docs.map((DocumentSnapshot document) {
+                      Map<String, dynamic> data =
+                          document.data()! as Map<String, dynamic>;
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Taskpage(
+                                    id: document.id,
+                                    title: document.get('title'),
+                                    desc: document.get('desc'),
+                                    color: data['color'] != null
+                                        ? Color(data['color'])
+                                        : Colors.white,
+                                    date: document.get('date'),
+                                    time: document.get('time'),
+                                    image: document.get('image'),
+                                    todolist: document.get('todolist'),
+                                    tags: document.get('tags')),
+                              ));
+                        },
+                        child: TaskCardWidget(
+                          id: data['id'],
+                          title: data['title'],
+                          desc: data['desc'],
+                          color: data['color'] != null
+                              ? Color(data['color'])
+                              : Colors.white,
+                          date: data['date'],
+                          time: data['time'],
+                          image: data['image'],
+                        ),
+                      );
+                    }).toList(),
+                  );
+                },
               ),
-            ]),
-          ),
+            ),
+          ]),
         ),
       ),
       floatingActionButton: FloatingActionButton(
