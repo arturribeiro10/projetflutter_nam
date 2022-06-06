@@ -1,13 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:projetflutter_nam/screens/taskpage.dart';
 
 class CustomSearchDelegate extends SearchDelegate {
-  List<String> searchTerms = [
-    'Travail',
-    'Personnel',
-    'Urgent',
-    'Important',
-    'Vacances'
-  ];
+  CollectionReference _firebaseFirestore =
+      FirebaseFirestore.instance.collection("taches");
+
+  List<String> searchTerms = [];
 
   @override
   //Nettoie la requête
@@ -35,43 +34,109 @@ class CustomSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    List<String> matchQuery = [];
-    for (var tags in searchTerms) {
-      if (tags.toLowerCase().contains(query.toLowerCase())) {
-        matchQuery.add(tags);
-      }
-    }
-    return ListView.builder(
-      itemCount: matchQuery.length,
-      itemBuilder: (context, index) {
-        var result = matchQuery[index];
-        return ListTile(
-          title: Text(result),
-        );
-      },
-    );
+    return StreamBuilder<QuerySnapshot>(
+        stream: _firebaseFirestore.snapshots().asBroadcastStream(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
+          } else {
+            if (snapshot.data!.docs
+                .where((QueryDocumentSnapshot<Object?> element) =>
+                    element['title']
+                        .toString()
+                        .toLowerCase()
+                        .contains(query.toLowerCase()) ||
+                    element['desc']
+                        .toString()
+                        .toLowerCase()
+                        .contains(query.toLowerCase()) ||
+                    element['tags']
+                        .toString()
+                        .toLowerCase()
+                        .contains(query.toLowerCase()))
+                .isEmpty) {
+              return Center(
+                child: Text("Aucun résultat trouvé",
+                    style: TextStyle(fontSize: 18)),
+              );
+            }
+            print(snapshot.data);
+            return ListView(children: [
+              ...snapshot.data!.docs
+                  .where((QueryDocumentSnapshot<Object?> element) =>
+                      element['title']
+                          .toString()
+                          .toLowerCase()
+                          .contains(query.toLowerCase()) ||
+                      element['desc']
+                          .toString()
+                          .toLowerCase()
+                          .contains(query.toLowerCase()) ||
+                      element['tags']
+                          .toString()
+                          .toLowerCase()
+                          .contains(query.toLowerCase()))
+                  .map((QueryDocumentSnapshot<Object?> data) {
+                final String title = data['title'];
+                final List<dynamic> tags = data['tags'];
+                final String desc = data['desc'];
+
+                return ListTile(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Taskpage(
+                                id: data.id,
+                                title: data.get('title'),
+                                desc: data.get('desc'),
+                                color: data['color'] != null
+                                    ? Color(data['color'])
+                                    : Colors.white,
+                                date: data.get('date'),
+                                time: data.get('time'),
+                                image: data.get('image'),
+                                todolist: data.get('todolist'),
+                                tags: data.get('tags'))));
+                  },
+                  title: Row(
+                    children: [
+                      Text(
+                        title,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
+                      Text(" - "),
+                      Text(desc)
+                    ],
+                  ),
+                  subtitle: Row(
+                    children: tags.map((data) {
+                      return Text(
+                        " #" + data['tag'],
+                        style: TextStyle(fontSize: 15),
+                      );
+                    }).toList(),
+                  ),
+                );
+              }),
+            ]);
+          }
+        });
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    List<String> matchQuery = [];
-    for (var fruit in searchTerms) {
-      if (fruit.toLowerCase().contains(query.toLowerCase())) {
-        matchQuery.add(fruit);
-      }
-    }
-    return ListView.builder(
-      itemCount: matchQuery.length,
-      itemBuilder: (context, index) {
-        var result = matchQuery[index];
-        return ListTile(
-          title: Text(result),
-        );
-      },
+    return Center(
+      child: Text(
+        "Cherchez par titre, description, tags...",
+        style: TextStyle(fontSize: 18),
+      ),
     );
   }
 }
 
 /*
- * Author : Nicolas
+ * Authors : Manuel, Nicolas, Artur
+ * Search feature
  */

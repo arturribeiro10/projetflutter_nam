@@ -188,3 +188,8 @@ class _HomepageState extends State<Homepage> {
  * restructuration de la page en listview
  * + bouton flottant add new
  */
+
+/*
+ * Authors : Manuel, Nicolas, Artur
+ * Search feature
+ */

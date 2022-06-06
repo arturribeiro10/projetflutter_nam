@@ -18,12 +18,12 @@ Future<void> creerNotificationFinEcheance(
       content: NotificationContent(
         id: createUniqueId(),
         channelKey: 'key3',
-        title: 'Tâche XYZ',
+        title: 'Attention!!',
         body: 'Votre tâche est arrivée à échéance',
         notificationLayout: NotificationLayout.Default,
       ),
       actionButtons: [
-        NotificationActionButton(key: 'MARK_DONE', label: 'Mark Done'),
+        NotificationActionButton(key: 'MARK_DONE', label: 'OK'),
       ],
       schedule: NotificationCalendar(
         year: echeance.date.year,
@@ -40,7 +40,6 @@ Future<void> creerNotificationFinEcheance(
 Future<void> cancelScheduledNotifications() async {
   await AwesomeNotifications().cancelAllSchedules();
 }
-
 /*
  * Author : Manuel
  */

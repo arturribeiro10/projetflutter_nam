@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:projetflutter_nam/widgets.dart';
 
 class TaskCardWidget extends StatelessWidget {
   final id;
